@@ -17,8 +17,8 @@ message Seller{
 }
 
 message Rate_an_item{
-  User buyer=1;
-  User seller=2;
+  Buyer buyer=1;
+  Seller seller=2;
   int32 rating=3;
   string review=4;
 }
