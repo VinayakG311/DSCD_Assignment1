@@ -14,6 +14,8 @@ service Market{
   rpc NotifyClient(void) returns (void){};
   rpc messaging(clientMessage) returns (serverMessage);
 
+=======
+
 
 }
 
@@ -44,12 +46,12 @@ message Buyer{
 message Seller{
   User user=1;
   string UUID=2;
+  Products products=3;
   // repeated Product products=3;
 }
 
 message Rate_an_item{
   Buyer buyer=1;
-  Seller seller=2;
   int32 rating=3;
   string review=4;
 }
