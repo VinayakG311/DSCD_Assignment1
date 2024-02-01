@@ -1,5 +1,11 @@
 syntax= "proto3";
 
+
+message Market{
+  repeated Buyer buyers=1;
+  repeated Seller sellers=2;
+  repeated Product products=3;
+}
 message User{
   string address=1;
   string name=2;
@@ -9,11 +15,15 @@ message User{
 
 message Buyer{
   User user=1;
+  repeated Product wishlist=2;
+  repeated Rate_an_item reviews=3;
+  repeated Product cart=4;
 }
 message Seller{
   User user=1;
   string UUID=2;
   repeated Product products=3;
+
 }
 
 message Rate_an_item{
@@ -30,6 +40,6 @@ message Product{
   string description=4;
   string seller_address=5;
   string seller_UUID=6;
+  repeated Rate_an_item reviews=7;
   enum Category {ELECTRONIC=0;FASHION=1;OTHERS=2;};
-
 }
