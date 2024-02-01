@@ -14,23 +14,25 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cmodule.proto\"4\n\x04User\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\"\x1c\n\x05\x42uyer\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"G\n\x06Seller\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\x12\x0c\n\x04UUID\x18\x02 \x01(\t\x12\x1a\n\x08products\x18\x03 \x03(\x0b\x32\x08.Product\"[\n\x0cRate_an_item\x12\x14\n\x05\x62uyer\x18\x01 \x01(\x0b\x32\x05.User\x12\x15\n\x06seller\x18\x02 \x01(\x0b\x32\x05.User\x12\x0e\n\x06rating\x18\x03 \x01(\x05\x12\x0e\n\x06review\x18\x04 \x01(\t\"\xaf\x01\n\x07Product\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12\x10\n\x08quantity\x18\x03 \x01(\x05\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x16\n\x0eseller_address\x18\x05 \x01(\t\x12\x13\n\x0bseller_UUID\x18\x06 \x01(\t\"3\n\x08\x43\x61tegory\x12\x0e\n\nELECTRONIC\x10\x00\x12\x0b\n\x07\x46\x41SHION\x10\x01\x12\n\n\x06OTHERS\x10\x02\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cmodule.proto\"V\n\x06Market\x12\x16\n\x06\x62uyers\x18\x01 \x03(\x0b\x32\x06.Buyer\x12\x18\n\x07sellers\x18\x02 \x03(\x0b\x32\x07.Seller\x12\x1a\n\x08products\x18\x03 \x03(\x0b\x32\x08.Product\"4\n\x04User\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\"p\n\x05\x42uyer\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\x12\x1a\n\x08wishlist\x18\x02 \x03(\x0b\x32\x08.Product\x12\x1e\n\x07reviews\x18\x03 \x03(\x0b\x32\r.Rate_an_item\x12\x16\n\x04\x63\x61rt\x18\x04 \x03(\x0b\x32\x08.Product\"G\n\x06Seller\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\x12\x0c\n\x04UUID\x18\x02 \x01(\t\x12\x1a\n\x08products\x18\x03 \x03(\x0b\x32\x08.Product\"^\n\x0cRate_an_item\x12\x15\n\x05\x62uyer\x18\x01 \x01(\x0b\x32\x06.Buyer\x12\x17\n\x06seller\x18\x02 \x01(\x0b\x32\x07.Seller\x12\x0e\n\x06rating\x18\x03 \x01(\x05\x12\x0e\n\x06review\x18\x04 \x01(\t\"\xcf\x01\n\x07Product\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12\x10\n\x08quantity\x18\x03 \x01(\x05\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x16\n\x0eseller_address\x18\x05 \x01(\t\x12\x13\n\x0bseller_UUID\x18\x06 \x01(\t\x12\x1e\n\x07reviews\x18\x07 \x03(\x0b\x32\r.Rate_an_item\"3\n\x08\x43\x61tegory\x12\x0e\n\nELECTRONIC\x10\x00\x12\x0b\n\x07\x46\x41SHION\x10\x01\x12\n\n\x06OTHERS\x10\x02\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'module_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_USER']._serialized_start=16
-  _globals['_USER']._serialized_end=68
-  _globals['_BUYER']._serialized_start=70
-  _globals['_BUYER']._serialized_end=98
-  _globals['_SELLER']._serialized_start=100
-  _globals['_SELLER']._serialized_end=171
-  _globals['_RATE_AN_ITEM']._serialized_start=173
-  _globals['_RATE_AN_ITEM']._serialized_end=264
-  _globals['_PRODUCT']._serialized_start=267
-  _globals['_PRODUCT']._serialized_end=442
-  _globals['_PRODUCT_CATEGORY']._serialized_start=391
-  _globals['_PRODUCT_CATEGORY']._serialized_end=442
+  _globals['_MARKET']._serialized_start=16
+  _globals['_MARKET']._serialized_end=102
+  _globals['_USER']._serialized_start=104
+  _globals['_USER']._serialized_end=156
+  _globals['_BUYER']._serialized_start=158
+  _globals['_BUYER']._serialized_end=270
+  _globals['_SELLER']._serialized_start=272
+  _globals['_SELLER']._serialized_end=343
+  _globals['_RATE_AN_ITEM']._serialized_start=345
+  _globals['_RATE_AN_ITEM']._serialized_end=439
+  _globals['_PRODUCT']._serialized_start=442
+  _globals['_PRODUCT']._serialized_end=649
+  _globals['_PRODUCT_CATEGORY']._serialized_start=598
+  _globals['_PRODUCT_CATEGORY']._serialized_end=649
 # @@protoc_insertion_point(module_scope)
