@@ -1,12 +1,17 @@
 syntax= "proto3";
 
 service Market{
-  rpc registerSeller(Seller) returns (void);
-  rpc addProduct(Product) returns (void);
-  rpc updateProduct(Product) returns (void);
-  rpc deleteProduct(Product) returns (void);
-  rpc viewProduct(void) returns (Product);
-  rpc searchProduct(void) returns (Products);
+  rpc registerSeller(Seller) returns (void){};
+  rpc addProduct(Product) returns (void){};
+  rpc updateProduct(Product) returns (void){};
+  rpc deleteProduct(Product) returns (void){};
+  rpc viewProduct(void) returns (Product){};
+  rpc searchProduct(void) returns (Products){};
+  rpc addRating(Rate_an_item) returns (Product){};
+  rpc displayProducts(Seller) returns (Products){};
+  rpc buyProduct(Products) returns (void){};
+  rpc addtoWishlist(Product) returns (Products){};
+  rpc NotifyClient(void) returns (void){};
 
 }
 
@@ -27,12 +32,12 @@ message Buyer{
 message Seller{
   User user=1;
   string UUID=2;
+  Products products=3;
   // repeated Product products=3;
 }
 
 message Rate_an_item{
   Buyer buyer=1;
-  Seller seller=2;
   int32 rating=3;
   string review=4;
 }
