@@ -1,18 +1,35 @@
 syntax= "proto3";
 
 service Market{
-  rpc registerSeller(Seller) returns (void);
-  rpc addProduct(Product) returns (void);
-  rpc updateProduct(Product) returns (void);
-  rpc deleteProduct(Product) returns (void);
-  rpc viewProduct(void) returns (Product);
-  rpc searchProduct(void) returns (Products);
+  rpc registerSeller(Seller) returns (void){};
+  rpc addProduct(Product) returns (void){};
+  rpc updateProduct(Product) returns (void){};
+  rpc deleteProduct(Product) returns (void){};
+  rpc viewProduct(void) returns (Product){};
+  rpc searchProduct(void) returns (Products){};
+  rpc addRating(Rate_an_item) returns (Product){};
+  rpc displayProducts(Seller) returns (Products){};
+  rpc buyProduct(Products) returns (void){};
+  rpc addtoWishlist(Product) returns (Products){};
+  rpc NotifyClient(void) returns (void){};
+  rpc messaging(clientMessage) returns (serverMessage);
+
 
 }
 
 message void{
 
 }
+
+message clientMessage {
+  string name = 1;
+  string greeting = 2;
+  
+}
+message serverMessage {
+  string message = 1;
+}
+
 
 message User{
   string address=1;
