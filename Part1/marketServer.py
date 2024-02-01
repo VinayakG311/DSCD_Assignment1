@@ -9,8 +9,8 @@ from concurrent import futures
 
 class MarketServicer(market_pb2_grpc.MarketServicer):
     def registerSeller(self, request, context):
-        # return super().registerSeller(request, context)
         print(request.UUID)
+        return market_pb2.void()
 
     def viewProduct(self, request, context):
         for product in request.products:
