@@ -41,24 +41,24 @@ class Buyer(_message.Message):
     def __init__(self, user: _Optional[_Union[User, _Mapping]] = ...) -> None: ...
 
 class Seller(_message.Message):
-    __slots__ = ("user", "UUID")
+    __slots__ = ("user", "UUID", "products")
     USER_FIELD_NUMBER: _ClassVar[int]
     UUID_FIELD_NUMBER: _ClassVar[int]
+    PRODUCTS_FIELD_NUMBER: _ClassVar[int]
     user: User
     UUID: str
-    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ..., UUID: _Optional[str] = ...) -> None: ...
+    products: Products
+    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ..., UUID: _Optional[str] = ..., products: _Optional[_Union[Products, _Mapping]] = ...) -> None: ...
 
 class Rate_an_item(_message.Message):
-    __slots__ = ("buyer", "seller", "rating", "review")
+    __slots__ = ("buyer", "rating", "review")
     BUYER_FIELD_NUMBER: _ClassVar[int]
-    SELLER_FIELD_NUMBER: _ClassVar[int]
     RATING_FIELD_NUMBER: _ClassVar[int]
     REVIEW_FIELD_NUMBER: _ClassVar[int]
     buyer: Buyer
-    seller: Seller
     rating: int
     review: str
-    def __init__(self, buyer: _Optional[_Union[Buyer, _Mapping]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[int] = ..., review: _Optional[str] = ...) -> None: ...
+    def __init__(self, buyer: _Optional[_Union[Buyer, _Mapping]] = ..., rating: _Optional[int] = ..., review: _Optional[str] = ...) -> None: ...
 
 class Product(_message.Message):
     __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID")
