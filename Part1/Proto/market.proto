@@ -12,12 +12,26 @@ service Market{
   rpc buyProduct(Products) returns (void){};
   rpc addtoWishlist(Product) returns (Products){};
   rpc NotifyClient(void) returns (void){};
+  rpc messaging(clientMessage) returns (serverMessage);
+
+=======
+
 
 }
 
 message void{
 
 }
+
+message clientMessage {
+  string name = 1;
+  string greeting = 2;
+  
+}
+message serverMessage {
+  string message = 1;
+}
+
 
 message User{
   string address=1;
