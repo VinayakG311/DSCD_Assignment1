@@ -10,12 +10,13 @@ import socket
 
 hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
-seller = market_pb2.Seller(UUID="-1",address="-1",products=[])
+seller = market_pb2.Seller(UUID="-1",address="1",products=[])
 
 def registerSeller(stub):
     # print(seller)
-    seller = market_pb2.Seller(UUID=id,address = ipAddr,products = [])
+
     id = str(uuid.uuid1())
+    seller = market_pb2.Seller(UUID=str(id), address=ipAddr, products=[])
     
     req = market_pb2.registerSellerReq(address = ipAddr,uuid = id)
     res = stub.registerSeller(req)
@@ -41,9 +42,9 @@ def addItem(stub):
     sellerUUID = seller.UUID
     category = int(input("Enter category (Elec 0, Fas 1, Oth 2)"))
     
-    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID,Category=category)
+    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID)
     res = stub.sellItem(req)
-    print(f"Product added with UUID : {res.productUUID}")
+    # print(f"Product added with UUID : {res.productUUID}")
 
 def run():
     try:
@@ -69,4 +70,6 @@ def run():
 
 
 if __name__ == '__main__':
+
     run()
+
