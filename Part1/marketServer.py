@@ -15,7 +15,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
     sellerList = {}
 #------------------------Seller--------------------------------- 
     def registerSeller(self, request, context):
-        currAddress = request.address
+        currAddress = request.uuid
         status = -1
         if currAddress in self.sellerList:
             status = market_pb2.Status.FAILURE
@@ -23,9 +23,9 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
             self.sellerList[currAddress] = 1
             status = market_pb2.Status.SUCCESS
         res = market_pb2.registerSellerRes(status = status)
+        print(self.sellerList)
         return res
-        # print(request.UUID)
-        # return market_pb2.void()
+
     def sellItem(self, request, context):
         product = market_pb2.Product(name = request.name, price = request.price, quantity=request.quantity,description=request.description,seller_address=request.sellerAddress,seller_UUID=request.sellerUUID)
         #request.seller.products.append(product)

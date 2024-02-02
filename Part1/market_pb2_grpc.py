@@ -74,11 +74,6 @@ class MarketStub(object):
                 request_serializer=market__pb2.void.SerializeToString,
                 response_deserializer=market__pb2.void.FromString,
                 )
-        self.messaging = channel.unary_unary(
-                '/Market/messaging',
-                request_serializer=market__pb2.clientMessage.SerializeToString,
-                response_deserializer=market__pb2.serverMessage.FromString,
-                )
 
 
 class MarketServicer(object):
@@ -156,12 +151,6 @@ class MarketServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def messaging(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
 
 def add_MarketServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -224,11 +213,6 @@ def add_MarketServicer_to_server(servicer, server):
                     servicer.NotifyClient,
                     request_deserializer=market__pb2.void.FromString,
                     response_serializer=market__pb2.void.SerializeToString,
-            ),
-            'messaging': grpc.unary_unary_rpc_method_handler(
-                    servicer.messaging,
-                    request_deserializer=market__pb2.clientMessage.FromString,
-                    response_serializer=market__pb2.serverMessage.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -441,22 +425,5 @@ class Market(object):
         return grpc.experimental.unary_unary(request, target, '/Market/NotifyClient',
             market__pb2.void.SerializeToString,
             market__pb2.void.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def messaging(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Market/messaging',
-            market__pb2.clientMessage.SerializeToString,
-            market__pb2.serverMessage.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
