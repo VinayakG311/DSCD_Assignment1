@@ -30,7 +30,7 @@ def registerSeller(stub):
          print(f"Failure, Seller with address {ipAddr} already exists")
     
 def addItem(stub):
-    print(seller)
+    # print(seller)
     if(seller.address == "-1"):
         print("No seller currently")
         return
