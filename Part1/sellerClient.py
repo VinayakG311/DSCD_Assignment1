@@ -44,7 +44,8 @@ def addItem(stub):
     
     req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID)
     res = stub.sellItem(req)
-    # print(f"Product added with UUID : {res.productUUID}")
+   # print(res)
+    print(f"Product added with UUID : {res.productUUID}")
 
 def run():
     try:
