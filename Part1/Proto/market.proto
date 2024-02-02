@@ -1,7 +1,8 @@
 syntax= "proto3";
 
 service Market{
-  rpc registerSeller(Seller) returns (void){};
+  rpc registerSeller(registerSellerReq) returns (registerSellerRes){};
+  rpc sellItem(sellItemReq) returns (sellItemRes){};
   rpc addProduct(Product) returns (void){};
   rpc updateProduct(Product) returns (void){};
   rpc deleteProduct(Product) returns (void){};
@@ -18,6 +19,17 @@ service Market{
 
 message void{
 
+}
+
+enum Status {
+  SUCCESS = 0;
+  FAILURE = 1;
+}
+
+enum Category {
+  ELECTRONIC=0;
+  FASHION=1;
+  OTHERS=2;
 }
 
 message clientMessage {
@@ -41,10 +53,15 @@ message Buyer{
   User user=1;
 }
 message Seller{
-  User user=1;
-  string UUID=2;
-  Products products=3;
-  // repeated Product products=3;
+  // User user=1;
+  string UUID = 1;
+  string address = 2;
+  // Products products=3;
+  repeated Product products=3;
+}
+
+message Sellers{
+  repeated Seller sellers = 1;
 }
 
 message Rate_an_item{
@@ -60,10 +77,36 @@ message Product{
   string description=4;
   string seller_address=5;
   string seller_UUID=6;
+  Seller seller = 7;
   enum Category {ELECTRONIC=0;FASHION=1;OTHERS=2;};
 
 }
 
 message Products{
   repeated Product products = 1;
+}
+
+message registerSellerReq{
+  string address = 1;
+  string uuid = 2;
+}
+
+message registerSellerRes{
+ Status status = 1;
+}
+
+
+message sellItemReq{
+  string name = 1;
+  int32 quantity = 2;
+  string description = 3;
+  string sellerAddress = 4;
+  float price = 5;
+  string sellerUUID = 6;
+  Category Category = 7;
+}
+
+message sellItemRes{
+  string productUUID = 1;
+  Status status = 2;
 }

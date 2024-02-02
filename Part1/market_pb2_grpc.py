@@ -16,8 +16,13 @@ class MarketStub(object):
         """
         self.registerSeller = channel.unary_unary(
                 '/Market/registerSeller',
-                request_serializer=market__pb2.Seller.SerializeToString,
-                response_deserializer=market__pb2.void.FromString,
+                request_serializer=market__pb2.registerSellerReq.SerializeToString,
+                response_deserializer=market__pb2.registerSellerRes.FromString,
+                )
+        self.sellItem = channel.unary_unary(
+                '/Market/sellItem',
+                request_serializer=market__pb2.sellItemReq.SerializeToString,
+                response_deserializer=market__pb2.sellItemRes.FromString,
                 )
         self.addProduct = channel.unary_unary(
                 '/Market/addProduct',
@@ -80,6 +85,12 @@ class MarketServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def registerSeller(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def sellItem(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -156,8 +167,13 @@ def add_MarketServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'registerSeller': grpc.unary_unary_rpc_method_handler(
                     servicer.registerSeller,
-                    request_deserializer=market__pb2.Seller.FromString,
-                    response_serializer=market__pb2.void.SerializeToString,
+                    request_deserializer=market__pb2.registerSellerReq.FromString,
+                    response_serializer=market__pb2.registerSellerRes.SerializeToString,
+            ),
+            'sellItem': grpc.unary_unary_rpc_method_handler(
+                    servicer.sellItem,
+                    request_deserializer=market__pb2.sellItemReq.FromString,
+                    response_serializer=market__pb2.sellItemRes.SerializeToString,
             ),
             'addProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.addProduct,
@@ -236,8 +252,25 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/registerSeller',
-            market__pb2.Seller.SerializeToString,
-            market__pb2.void.FromString,
+            market__pb2.registerSellerReq.SerializeToString,
+            market__pb2.registerSellerRes.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def sellItem(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Market/sellItem',
+            market__pb2.sellItemReq.SerializeToString,
+            market__pb2.sellItemRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
