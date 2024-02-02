@@ -22,12 +22,12 @@ def registerSeller(stub):
     res = stub.registerSeller(req)
    
     if(res.status == 0):
-        print(f"Success, Seller registered with uuid : {id}")
+        print(f"Success,Seller registered with uuid : {id}")
         
         # print(seller)
     else:
         
-         print(f"Failure, Seller with address {ipAddr} already exists")
+         print(f"Failure,Seller with address {ipAddr} already exists")
     
 def addItem(stub):
     # print(seller)
@@ -42,10 +42,9 @@ def addItem(stub):
     sellerUUID = seller.UUID
     category = int(input("Enter category (Elec 0, Fas 1, Oth 2)"))
     
-    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID)
+    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID,category = category)
     res = stub.sellItem(req)
-   # print(res)
-    print(f"Product added with UUID : {res.productUUID}")
+    # print(f"Product added with UUID : {res.productUUID}")
 
 def run():
     try:
