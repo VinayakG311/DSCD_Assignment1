@@ -12,11 +12,27 @@ from concurrent import futures
 
 class MarketServicer(market_pb2_grpc.MarketServicer):
 
+    sellerList = {}
 #------------------------Seller--------------------------------- 
     def registerSeller(self, request, context):
-        print(request.UUID)
-        return market_pb2.void()
-
+        currAddress = request.address
+        status = -1
+        if currAddress in self.sellerList:
+            status = market_pb2.Status.FAILURE
+        else:
+            self.sellerList[currAddress] = 1
+            status = market_pb2.Status.SUCCESS
+        res = market_pb2.registerSellerRes(status = status)
+        return res
+        # print(request.UUID)
+        # return market_pb2.void()
+    def sellItem(self, request, context):
+        product = market_pb2.Product(name = request.name, price = request.price, quantity=request.quantity,description=request.description,seller_address=request.sellerAddress,seller_UUID=request.sellerUUID,seller = request.seller,Category = request.category)
+        request.seller.products.append(product)
+        id = str(uuid.uuid1())
+        res = market_pb2.sellItemRes(productUUID=id,Status = 1)
+        return res
+    
     def addProduct(self, request, context):
         prod_name = request.name
         prod_category = request.category
