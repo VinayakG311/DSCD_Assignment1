@@ -26,35 +26,13 @@ class void(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
-class clientMessage(_message.Message):
-    __slots__ = ("name", "greeting")
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    GREETING_FIELD_NUMBER: _ClassVar[int]
-    name: str
-    greeting: str
-    def __init__(self, name: _Optional[str] = ..., greeting: _Optional[str] = ...) -> None: ...
-
-class serverMessage(_message.Message):
-    __slots__ = ("message",)
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    message: str
-    def __init__(self, message: _Optional[str] = ...) -> None: ...
-
-class User(_message.Message):
-    __slots__ = ("address", "name", "email")
-    ADDRESS_FIELD_NUMBER: _ClassVar[int]
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    EMAIL_FIELD_NUMBER: _ClassVar[int]
-    address: str
-    name: str
-    email: str
-    def __init__(self, address: _Optional[str] = ..., name: _Optional[str] = ..., email: _Optional[str] = ...) -> None: ...
-
 class Buyer(_message.Message):
-    __slots__ = ("user",)
-    USER_FIELD_NUMBER: _ClassVar[int]
-    user: User
-    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ...) -> None: ...
+    __slots__ = ("UUID", "address")
+    UUID_FIELD_NUMBER: _ClassVar[int]
+    ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    UUID: str
+    address: str
+    def __init__(self, UUID: _Optional[str] = ..., address: _Optional[str] = ...) -> None: ...
 
 class Seller(_message.Message):
     __slots__ = ("UUID", "address", "products")
@@ -83,15 +61,7 @@ class Rate_an_item(_message.Message):
     def __init__(self, buyer: _Optional[_Union[Buyer, _Mapping]] = ..., rating: _Optional[int] = ..., review: _Optional[str] = ...) -> None: ...
 
 class Product(_message.Message):
-    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "seller")
-    class Category(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-        __slots__ = ()
-        ELECTRONIC: _ClassVar[Product.Category]
-        FASHION: _ClassVar[Product.Category]
-        OTHERS: _ClassVar[Product.Category]
-    ELECTRONIC: Product.Category
-    FASHION: Product.Category
-    OTHERS: Product.Category
+    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "seller", "category")
     NAME_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
@@ -99,6 +69,7 @@ class Product(_message.Message):
     SELLER_ADDRESS_FIELD_NUMBER: _ClassVar[int]
     SELLER_UUID_FIELD_NUMBER: _ClassVar[int]
     SELLER_FIELD_NUMBER: _ClassVar[int]
+    CATEGORY_FIELD_NUMBER: _ClassVar[int]
     name: str
     price: float
     quantity: int
@@ -106,7 +77,8 @@ class Product(_message.Message):
     seller_address: str
     seller_UUID: str
     seller: Seller
-    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
+    category: Category
+    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., category: _Optional[_Union[Category, str]] = ...) -> None: ...
 
 class Products(_message.Message):
     __slots__ = ("products",)
