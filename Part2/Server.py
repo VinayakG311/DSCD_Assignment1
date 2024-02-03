@@ -1,16 +1,40 @@
 import time
 import zmq
 
+from Classes import Server
+
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:5555")
 
-while True:
 
-    message = socket.recv_pyobj()
-    print("Received request: %s" % message)
-    print(message.uuid)
+def run():
+    server = Server()
+    try:
+        while True:
 
-    time.sleep(1)
+            message = socket.recv()
 
-    socket.send(b"World")
+            socket.send_string('hi')
+            if message==B"REGISTER":
+                time.sleep(1)
+                server.res_group_reg(socket)
+            print("BYE")
+
+
+
+
+
+
+
+
+
+
+
+
+    except KeyboardInterrupt:
+        return
+
+
+if __name__ == '__main__':
+    run()

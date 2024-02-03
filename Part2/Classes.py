@@ -1,3 +1,6 @@
+import time
+
+
 class Message:
     content: str
     timestamp: str
@@ -33,19 +36,51 @@ class Group:
     address: str
     Users: [User]
     Messages: [Message]
+    Status: int
 
     def __init__(self, uuid, address):
         self.uuid = uuid
         self.address = address
         self.Users = []
         self.Messages = []
+        self.Status=0
 
-    def Req_Register(self):
+    def Req_Register(self,socket):
         # Send a req to register to server
+        socket.send_pyobj(self)
+        rep = socket.recv_string()
 
-        pass
+        if rep=='SUCCESS':
+            self.Status=1
 
 
 
 class Server:
     Groups: [Group]
+    def __init__(self):
+        self.Groups=[]
+    def res_group_reg(self,socket):
+
+        message=socket.recv_pyobj()
+
+        print(message)
+        print("JOIN REQUEST FROM: %s" % message.address)
+        if self.Groups == []:
+            print('SUCCESS')
+            self.Groups.append(message)
+            socket.send_string("SUCCESS")
+        else:
+            f = 0
+            for i in self.Groups:
+                if i.uuid == message.uuid:
+                    f = 1
+                    break
+            if f == 0:
+                print('SUCCESS')
+                self.Groups.append(message)
+                time.sleep(1)
+                socket.send_string('SUCCESS')
+            else:
+                print('ERROR: Group already exists')
+                time.sleep(1)
+                socket.send_string('FAILURE')

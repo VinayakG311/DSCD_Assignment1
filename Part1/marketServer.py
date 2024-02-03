@@ -120,9 +120,6 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
         return super().addtoWishlist(request, context)
 
 #------------------------buyer&seller---------------------------------
-    def messaging(self, request, context):
-        print("Clients message" + str(request))
-        return market_pb2.serverMessage(message='{0} {1}!'.format(request.greeting, request.name))
 
         #  return super().addProduct(request, context)
         #  return super().viewProduct(request, context)
