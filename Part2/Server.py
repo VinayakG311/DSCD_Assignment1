@@ -9,7 +9,7 @@ while True:
 
     message = socket.recv_pyobj()
     print("Received request: %s" % message)
-
+    print(message.uuid)
 
     time.sleep(1)
 

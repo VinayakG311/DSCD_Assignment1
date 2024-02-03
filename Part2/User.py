@@ -6,11 +6,15 @@ import zmq
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 context = zmq.Context()
-socket = context.socket(zmq.PUB)
-socket.bind('tcp://*:5555')
 
-for i in range(5):
-    socket.send(b'sttuss 5')
-    socket.send(b'status 5')
-    socket.send(b'All is well')
-    time.sleep(1)
+
+
+def connect_to_MessageServer():
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://localhost:5555")
+def connect_to_GroupServer():
+    socket2 = context.socket(zmq.REQ)
+    socket2.connect("tcp://localhost:8888")
+
+if __name__== "main":
+    connect_to_MessageServer()

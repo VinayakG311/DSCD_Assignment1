@@ -1,14 +1,15 @@
 import zmq
-
+from Classes import Group
 context = zmq.Context()
 
-socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
-l=[5]
 
-for request in range(10):
-    print("Sending request %s …" % request)
-    socket.send_pyobj(l)
+def run_as_client():
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://localhost:5555")
+def run_as_server():
+    sock2 = context.socket(zmq.REP)
+    sock2.bind("tcp://*:8888")
 
-    message = socket.recv()
-    print("Received reply %s [ %s ]" % (request, message))
+if __name__ == 'main':
+    run_as_server()
+    run_as_client()
