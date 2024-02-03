@@ -12,10 +12,15 @@ hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
 seller = market_pb2.Seller(UUID="-1",address="1",products=[])
 
+s_id = "";
+s_addr = ""
+
 def registerSeller(stub):
     # print(seller)
 
     id = str(uuid.uuid1())
+    s_id = id
+    
     seller = market_pb2.Seller(UUID=str(id), address=ipAddr, products=[])
     
     req = market_pb2.registerSellerReq(address = ipAddr,uuid = id)
@@ -24,6 +29,7 @@ def registerSeller(stub):
     if(res.status == 0):
         print(f"Success,Seller registered with uuid : {id}")
         
+        s_addr = ipAddr
         # print(seller)
     else:
         
@@ -31,18 +37,18 @@ def registerSeller(stub):
     
 def addItem(stub):
     # print(seller)
-    if(seller.address == "-1"):
-        print("No seller currently")
-        return
+    # if(seller.address == "-1"):
+    #     print("No seller currently")
+    #     return
     name = input("Enter product name : ")
     qty = int(input("Enter product quantity : "))
     description = input("Enter product description : ")
-    sellerAddress = seller.address
+    sellerAddress = ipAddr
     price = float(input("Enter prodcut price : "))
-    sellerUUID = seller.UUID
+    sellerUUID = s_id
     category = int(input("Enter category (Elec 0, Fas 1, Oth 2)"))
     
-    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID,category = category)
+    req = market_pb2.sellItemReq(name = name,quantity=qty,description=description,sellerAddress=sellerAddress,price = price,sellerUUID=sellerUUID,Category = category)
     res = stub.sellItem(req)
     # print(f"Product added with UUID : {res.productUUID}")
 

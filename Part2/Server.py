@@ -21,17 +21,6 @@ def run():
                 server.res_group_reg(socket)
             print("BYE")
 
-
-
-
-
-
-
-
-
-
-
-
     except KeyboardInterrupt:
         return
 
