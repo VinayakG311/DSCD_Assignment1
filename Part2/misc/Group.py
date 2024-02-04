@@ -1,7 +1,5 @@
-import time
-
 import zmq
-from Classes import Group
+from Part2.misc.Classes import Group
 context = zmq.Context()
 
 

@@ -1,7 +1,7 @@
 import time
 import zmq
 
-from Classes import Server
+from Part2.misc.Classes import Server
 
 context = zmq.Context()
 socket = context.socket(zmq.REP)

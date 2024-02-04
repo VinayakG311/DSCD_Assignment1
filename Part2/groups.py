@@ -74,5 +74,6 @@ while(1):
     else:
       users.pop(userId)
       response = f"SUCCESS, USER {userId} has successfully left the group at address {ipAddr} "
+    messageSocket.send_string(response)
   
   time.sleep(1)
