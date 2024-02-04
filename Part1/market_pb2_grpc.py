@@ -22,7 +22,7 @@ class MarketStub(object):
         self.sellItem = channel.unary_unary(
                 '/Market/sellItem',
                 request_serializer=market__pb2.sellItemReq.SerializeToString,
-                response_deserializer=market__pb2.sellItemRes.FromString,
+                response_deserializer=market__pb2.Seller.FromString,
                 )
         self.addProduct = channel.unary_unary(
                 '/Market/addProduct',
@@ -31,13 +31,13 @@ class MarketStub(object):
                 )
         self.updateProduct = channel.unary_unary(
                 '/Market/updateProduct',
-                request_serializer=market__pb2.Product.SerializeToString,
-                response_deserializer=market__pb2.void.FromString,
+                request_serializer=market__pb2.UpdateItemReq.SerializeToString,
+                response_deserializer=market__pb2.UpdateItemRes.FromString,
                 )
         self.deleteProduct = channel.unary_unary(
                 '/Market/deleteProduct',
-                request_serializer=market__pb2.Product.SerializeToString,
-                response_deserializer=market__pb2.void.FromString,
+                request_serializer=market__pb2.DeleteItemReq.SerializeToString,
+                response_deserializer=market__pb2.DeleteItemRes.FromString,
                 )
         self.viewProduct = channel.unary_unary(
                 '/Market/viewProduct',
@@ -162,7 +162,7 @@ def add_MarketServicer_to_server(servicer, server):
             'sellItem': grpc.unary_unary_rpc_method_handler(
                     servicer.sellItem,
                     request_deserializer=market__pb2.sellItemReq.FromString,
-                    response_serializer=market__pb2.sellItemRes.SerializeToString,
+                    response_serializer=market__pb2.Seller.SerializeToString,
             ),
             'addProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.addProduct,
@@ -171,13 +171,13 @@ def add_MarketServicer_to_server(servicer, server):
             ),
             'updateProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.updateProduct,
-                    request_deserializer=market__pb2.Product.FromString,
-                    response_serializer=market__pb2.void.SerializeToString,
+                    request_deserializer=market__pb2.UpdateItemReq.FromString,
+                    response_serializer=market__pb2.UpdateItemRes.SerializeToString,
             ),
             'deleteProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.deleteProduct,
-                    request_deserializer=market__pb2.Product.FromString,
-                    response_serializer=market__pb2.void.SerializeToString,
+                    request_deserializer=market__pb2.DeleteItemReq.FromString,
+                    response_serializer=market__pb2.DeleteItemRes.SerializeToString,
             ),
             'viewProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.viewProduct,
@@ -254,7 +254,7 @@ class Market(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/sellItem',
             market__pb2.sellItemReq.SerializeToString,
-            market__pb2.sellItemRes.FromString,
+            market__pb2.Seller.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -287,8 +287,8 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/updateProduct',
-            market__pb2.Product.SerializeToString,
-            market__pb2.void.FromString,
+            market__pb2.UpdateItemReq.SerializeToString,
+            market__pb2.UpdateItemRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -304,8 +304,8 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/deleteProduct',
-            market__pb2.Product.SerializeToString,
-            market__pb2.void.FromString,
+            market__pb2.DeleteItemReq.SerializeToString,
+            market__pb2.DeleteItemRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
