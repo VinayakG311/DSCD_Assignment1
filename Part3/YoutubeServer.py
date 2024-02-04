@@ -1,3 +1,5 @@
+import json
+
 import pika, sys, os
 
 def main():
@@ -7,7 +9,8 @@ def main():
     channel.queue_declare(queue='hello')
 
     def callback(ch, method, properties, body):
-        print(f" [x] Received {body}")
+        data=json.loads(body.decode('utf-8'))
+        print(data)
 
     channel.basic_consume(queue='hello', on_message_callback=callback, auto_ack=True)
     channel.start_consuming()
