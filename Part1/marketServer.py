@@ -13,6 +13,11 @@ from concurrent import futures
 class MarketServicer(market_pb2_grpc.MarketServicer):
 
     sellerList = {}
+    Sellers=[]
+    Products= []
+    Users=[]
+
+
 #------------------------Seller--------------------------------- 
     def registerSeller(self, request, context):
         currAddress = request.uuid
@@ -21,64 +26,62 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
             status = market_pb2.Status.FAILURE
         else:
             self.sellerList[currAddress] = 1
+            self.Sellers.append(market_pb2.Seller(address=request.address,UUID=request.uuid))
             status = market_pb2.Status.SUCCESS
         res = market_pb2.registerSellerRes(status = status)
-        print(self.sellerList)
+        print(f'seller join request from {request.address} with uuid {request.uuid}')
         return res
 
     def sellItem(self, request, context):
-        product = market_pb2.Product(name = request.name, price = request.price, quantity=request.quantity,description=request.description,seller_address=request.sellerAddress,seller_UUID=request.sellerUUID)
-        #request.seller.products.append(product)
         id = str(uuid.uuid1())
+        product = market_pb2.Product(Product_UUID=id,category=request.Category,name = request.name, price = request.price, quantity=request.quantity,description=request.description,seller_address=request.sellerAddress,seller_UUID=request.sellerUUID)
+        request.seller.products.append(product)
+        self.Products.append(product)
         res = market_pb2.sellItemRes(productUUID=id,status = market_pb2.Status.SUCCESS)
-        print(res)
-        return res
-    
-    def addProduct(self, request, context):
-        prod_name = request.name
-        prod_category = request.category
-        prod_quantity = request.quantity
-        prod_description = request.description
-        prod_price_per_unit = request.price
-        prod_seller_address = request.seller_address
-        prod_seller_UUID = request.seller_UUID
-        prod_id = str(uuid.uuid1())
-        prod_rating = 0
+        print(f'Product with {res.productUUID} has been registered by seller {request.sellerUUID}')
+        return request.seller
 
-        # for i in context.sellers:
-        #     if(i.UUID == prod_seller_UUID):
-        request.products.add(prod_id=prod_id, name=prod_name, category=prod_category, quantity=prod_quantity,
-                              description=prod_description, price=prod_price_per_unit, seller_address=prod_seller_address,
-                              seller_UUID=prod_seller_UUID, rating=prod_rating)
-                
-        #     return market_pb2.void()
-        
-        # print("Seller not found")   #Error message
 
     def deleteProduct(self, request, context): 
-        for product in request.products:
-            if(product.prod_id == request.prod_id):
-                request.products.remove(product)
-                return market_pb2.void()
-        print("Product not found")
+        for product in self.Products:
+            if product.Product_UUID == request.Product_UUID:
+                if request.seller_address == product.seller_address and request.seller_UUID == product.seller_UUID:
+                    self.Products.remove(product)
+                    print(f'Deleted item {request.Product_UUID} on request from seller {request.seller_UUID}')
+                    print(self.Products)
+                    return market_pb2.DeleteItemRes(productUUID=request.Product_UUID,status='SUCCESS')
 
-    def updateProduct(self, request, context):   #need to check the item id first 
-        for product in request.products:
-            if(product.prod_id == request.prod_id):
-                product.price = request.price
-                product.quantity = request.quantity
-                product.seller_address = request.seller_address
-                product.description = request.description
-                product.id = request.prod_id
-                return market_pb2.void()
         print("Product not found")
- 
+        return market_pb2.DeleteItemRes(productUUID=request.Product_UUID,status='FAILURE')
+
+    def updateProduct(self, request, context):   #need to check the item id first
+        res=None
+        for product in self.Products:
+            if product.Product_UUID == request.Product_UUID:
+                if(request.seller_address==product.seller_address and request.seller_UUID == product.seller_UUID):
+                    product.price = request.price
+                    product.quantity = request.quantity
+                    product.description = request.description
+                    res=market_pb2.UpdateItemRes(productUUID=product.Product_UUID,status='SUCCESS')
+                    print(f'Product with uuid {product.Product_UUID} has been updated by seller with uuid {request.seller_UUID}')
+                    return res
+                else:
+                    res = market_pb2.UpdateItemRes(productUUID=request.Product_UUID,status= 'FAILURE')
+                    print('Incorrect Seller Credentials')
+                break
+            else:
+                res = market_pb2.UpdateItemRes(productUUID=request.Product_UUID, status='FAILURE')
+                print("Product not found")
+
+        return res
  
     def displayProducts(self, request, context):   #for the seller to view the product(DisplaySellerItem)
-        for product in request.products:
-            if(product.seller_UUID == request.seller_UUID):
-                print(product.name, product.price, product.quantity, product.description, product.rating)
-                print("/n")
+
+        p = market_pb2.Products(products=[])
+        for i in self.Products:
+            if i.seller_UUID==request.UUID:
+                p.products.append(i)
+        return p
         
 
 #------------------------Buyer---------------------------------
@@ -93,6 +96,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
 
         request.buyers.add(name=seller_name, address=seller_address, contact=seller_contact,
                             email=seller_email, id=seller_id, wishlist=seller_wishlist)
+        return market_pb2.void()
 
     def searchItem(self, request, context):
         return super().searchProduct(request, context)
@@ -100,6 +104,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
     def viewProduct(self, request, context):   #for the customer to view the product(SearchItem one)
         for product in request.products:
             print(product.name)
+
 
     def rateProduct(self, request, context):   #for the customer to rate the product 
         if(request.rating > 5 or request.rating < 0):      #in UUID is getting used and address is just to not be NULL

@@ -2,10 +2,10 @@ syntax= "proto3";
 
 service Market{
   rpc registerSeller(registerSellerReq) returns (registerSellerRes){};
-  rpc sellItem(sellItemReq) returns (sellItemRes){};
+  rpc sellItem(sellItemReq) returns (Seller){};
   rpc addProduct(Product) returns (void){};
-  rpc updateProduct(Product) returns (void){};
-  rpc deleteProduct(Product) returns (void){};
+  rpc updateProduct(UpdateItemReq) returns (UpdateItemRes){};
+  rpc deleteProduct(DeleteItemReq) returns (DeleteItemRes){};
   rpc viewProduct(void) returns (Product){};
   rpc searchProduct(void) returns (Products){};
   rpc addRating(Rate_an_item) returns (Product){};
@@ -59,8 +59,9 @@ message Product{
   string description=4;
   string seller_address=5;
   string seller_UUID=6;
-  Seller seller = 7;
+  string Product_UUID=7;
   Category category =8;
+  Seller seller=9;
 
 }
 
@@ -71,6 +72,7 @@ message Products{
 message registerSellerReq{
   string address = 1;
   string uuid = 2;
+
 }
 
 message registerSellerRes{
@@ -86,9 +88,37 @@ message sellItemReq{
   float price = 5;
   string sellerUUID = 6;
   Category Category = 7;
+  Seller seller=8;
 }
 
 message sellItemRes{
   string productUUID = 1;
   Status status = 2;
+}
+
+message UpdateItemReq{
+  string Product_UUID=1;
+  string seller_UUID=2;
+  string seller_address=3;
+  int32 price=4;
+  int32 quantity=5;
+  string description=6;
+  Seller seller=7;
+}
+message UpdateItemRes{
+  string productUUID = 1;
+  string status = 2;
+}
+
+message DeleteItemReq{
+  string Product_UUID=1;
+  string seller_UUID=2;
+  string seller_address=3;
+
+}
+
+message DeleteItemRes{
+  string productUUID = 1;
+  string status = 2;
+
 }

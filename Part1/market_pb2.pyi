@@ -61,24 +61,26 @@ class Rate_an_item(_message.Message):
     def __init__(self, buyer: _Optional[_Union[Buyer, _Mapping]] = ..., rating: _Optional[int] = ..., review: _Optional[str] = ...) -> None: ...
 
 class Product(_message.Message):
-    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "seller", "category")
+    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "Product_UUID", "category", "seller")
     NAME_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     SELLER_ADDRESS_FIELD_NUMBER: _ClassVar[int]
     SELLER_UUID_FIELD_NUMBER: _ClassVar[int]
-    SELLER_FIELD_NUMBER: _ClassVar[int]
+    PRODUCT_UUID_FIELD_NUMBER: _ClassVar[int]
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
+    SELLER_FIELD_NUMBER: _ClassVar[int]
     name: str
     price: float
     quantity: int
     description: str
     seller_address: str
     seller_UUID: str
-    seller: Seller
+    Product_UUID: str
     category: Category
-    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., category: _Optional[_Union[Category, str]] = ...) -> None: ...
+    seller: Seller
+    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
 
 class Products(_message.Message):
     __slots__ = ("products",)
@@ -101,7 +103,7 @@ class registerSellerRes(_message.Message):
     def __init__(self, status: _Optional[_Union[Status, str]] = ...) -> None: ...
 
 class sellItemReq(_message.Message):
-    __slots__ = ("name", "quantity", "description", "sellerAddress", "price", "sellerUUID", "Category")
+    __slots__ = ("name", "quantity", "description", "sellerAddress", "price", "sellerUUID", "Category", "seller")
     NAME_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
@@ -109,6 +111,7 @@ class sellItemReq(_message.Message):
     PRICE_FIELD_NUMBER: _ClassVar[int]
     SELLERUUID_FIELD_NUMBER: _ClassVar[int]
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
+    SELLER_FIELD_NUMBER: _ClassVar[int]
     name: str
     quantity: int
     description: str
@@ -116,7 +119,8 @@ class sellItemReq(_message.Message):
     price: float
     sellerUUID: str
     Category: Category
-    def __init__(self, name: _Optional[str] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., sellerAddress: _Optional[str] = ..., price: _Optional[float] = ..., sellerUUID: _Optional[str] = ..., Category: _Optional[_Union[Category, str]] = ...) -> None: ...
+    seller: Seller
+    def __init__(self, name: _Optional[str] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., sellerAddress: _Optional[str] = ..., price: _Optional[float] = ..., sellerUUID: _Optional[str] = ..., Category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
 
 class sellItemRes(_message.Message):
     __slots__ = ("productUUID", "status")
@@ -125,3 +129,47 @@ class sellItemRes(_message.Message):
     productUUID: str
     status: Status
     def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[_Union[Status, str]] = ...) -> None: ...
+
+class UpdateItemReq(_message.Message):
+    __slots__ = ("Product_UUID", "seller_UUID", "seller_address", "price", "quantity", "description", "seller")
+    PRODUCT_UUID_FIELD_NUMBER: _ClassVar[int]
+    SELLER_UUID_FIELD_NUMBER: _ClassVar[int]
+    SELLER_ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    PRICE_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    SELLER_FIELD_NUMBER: _ClassVar[int]
+    Product_UUID: str
+    seller_UUID: str
+    seller_address: str
+    price: int
+    quantity: int
+    description: str
+    seller: Seller
+    def __init__(self, Product_UUID: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., seller_address: _Optional[str] = ..., price: _Optional[int] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
+
+class UpdateItemRes(_message.Message):
+    __slots__ = ("productUUID", "status")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    productUUID: str
+    status: str
+    def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+
+class DeleteItemReq(_message.Message):
+    __slots__ = ("Product_UUID", "seller_UUID", "seller_address")
+    PRODUCT_UUID_FIELD_NUMBER: _ClassVar[int]
+    SELLER_UUID_FIELD_NUMBER: _ClassVar[int]
+    SELLER_ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    Product_UUID: str
+    seller_UUID: str
+    seller_address: str
+    def __init__(self, Product_UUID: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., seller_address: _Optional[str] = ...) -> None: ...
+
+class DeleteItemRes(_message.Message):
+    __slots__ = ("productUUID", "status")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    productUUID: str
+    status: str
+    def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
