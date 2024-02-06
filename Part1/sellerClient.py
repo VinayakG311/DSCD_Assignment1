@@ -16,7 +16,7 @@ s_id = ""
 s_addr = ""
 s = seller
 
-
+#---------------------------------Seller---------------------------------
 def registerSeller(stub):
     global s,s_id,s_addr
     id = str(uuid.uuid1())
@@ -94,21 +94,153 @@ def UpdateItem(stub):
         print('FAILURE')
 
 
-
-
-
 def DisplayItem(stub):
     s_uuid = input('Enter Seller id : ')
     s_aadr = input('Enter Seller Address : ')
     res = stub.displayProducts(s)
     print(res)
 
+#-----------------------------------------------------------------------
 
+#---------------------------------Buyer---------------------------------
+# def registerBuyer(stub):
+#     global s,s_id,s_addr
+#     id = str(uuid.uuid1())
+#     s_id = id
+#     seller = market_pb2.Buyer(UUID=str(id), address=ipAddr, products=[])
+#     req = market_pb2.registerSellerReq(address=ipAddr, uuid=id)
+#     res = stub.registerSeller(req)
+#     if (res.status == 0):
+#         print(f"Success,Seller registered with uuid : {id}")
+#         s_addr = ipAddr
+#         s = seller
+#     else:
+
+#         print(f"Failure,Seller with address {ipAddr} already exists")
+    
+def searchItem(stub):  #searchItem for "sale?"
+    item_name = input("Enter the name of the product to be searched : ")
+    item_category = input("Enter the category of the product to be searched : ")
+    if(item_name==""):\
+        #return all items
+        pass
+
+    else:
+        req = market_pb2.searchItemReq(name=item_name , category=item_category)
+        res = stub.searchItem(req)
+        print(res)
+
+def buyProduct(stub):
+    p_id = input("Enter product id of the product to be bought : ")
+    s_uuid = input('Enter Seller id : ')
+    s_aadr = input('Enter Seller Address : ')
+    qty = int(input("Enter the quantity to be bought : "))
+
+    req = market_pb2.BuyItemReq(Product_UUID=p_id,seller_UUID=s_uuid,seller_address=s_aadr,quantity=qty,buyer=s)
+    res = stub.buyItem(req)
+    if res.status=='SUCCESS':
+        print('SUCCESS')
+    else:
+        print('FAILURE')
+
+def addtoWishlist(stub):    #subsrcribe to the product and get notified when the product is updated
+    p_id = input("Enter product id of the product to be added to wishlist : ")
+    s_uuid = input('Enter Seller id : ')
+
+
+def addRating(stub):       #item can be rated only once
+    p_id = input("Enter product id of the product to be rated : ")
+    buyer_addr = input("Enter the address of the buyer : ")
+    rating = int(input("Enter the rating of the product : "))
+    req = market_pb2.rateProductReq(prod_id=p_id, rating=rating, address=buyer_addr)
+    res = stub.rateProduct(req)
+    if res.status=='SUCCESS':
+        print('SUCCESS')
+    else:
+        print('FAILURE')
+
+
+#------------------------------------------------------------
+def menu_seller():
+    menu = """1: Register
+    2: Add Product
+    3: Delete Product
+    4: Update Product
+    5: Display Products
+    6: Exit
+    """
+    return menu
+    # print('1: Register\n 2: Add Product\n 3: Delete Product\n 4: Update Product\n 5: Display Products\n 6: Exit\n')
+
+def menu_buyer():
+    menu = """1: Register
+    2: Search Product
+    3: Buy Product
+    4: Add to Wishlist
+    5: Rate Product
+    6: Exit
+
+    """
+
+    return menu
+
+def ask_choice():
+    menu = """1: Buyer
+    2: Seller 
+    3: Exit
+    """
+    return menu
+
+
+def seller(stub):
+    try:
+        while True:
+            print(menu_seller())
+            a = int(input('Enter Choice : '))
+            if a == 1:
+                registerSeller(stub)
+            elif a == 2:
+                addItem(stub)
+            elif a == 3:
+                DeleteItem(stub)
+            elif a == 4:
+                UpdateItem(stub)
+            elif a == 5:
+                DisplayItem(stub)
+            else:
+                break
+    except KeyboardInterrupt:
+        return
+
+
+
+def buyer(stub):
+    try:
+        while True:
+            print(menu_buyer())
+            a = int(input('Enter Choice : '))
+            if a == 1:
+                registerSeller(stub)
+            elif a == 2:
+                searchItem(stub)
+            elif a == 3:
+                buyProduct(stub)
+            elif a == 4:
+                addtoWishlist(stub)
+            elif a == 5:
+                addRating(stub)
+            else:
+                break
+    except KeyboardInterrupt:
+        return
 
 def run():
+    client_flag = 0
+    seller_flag = 0
     try:
         while True:
             with grpc.insecure_channel('localhost:50051') as channel:
+                print(ask_choice())
                 stub = market_pb2_grpc.MarketStub(channel)
                 print(
                     '1: Register\n 2: Add Product\n 3: Delete Product\n 4: Update Product\n 5: Display Products\n 6: Exit\n')
