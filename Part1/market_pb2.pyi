@@ -27,12 +27,14 @@ class void(_message.Message):
     def __init__(self) -> None: ...
 
 class Buyer(_message.Message):
-    __slots__ = ("UUID", "address")
+    __slots__ = ("UUID", "address", "wishlist")
     UUID_FIELD_NUMBER: _ClassVar[int]
     ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    WISHLIST_FIELD_NUMBER: _ClassVar[int]
     UUID: str
     address: str
-    def __init__(self, UUID: _Optional[str] = ..., address: _Optional[str] = ...) -> None: ...
+    wishlist: _containers.RepeatedCompositeFieldContainer[Product]
+    def __init__(self, UUID: _Optional[str] = ..., address: _Optional[str] = ..., wishlist: _Optional[_Iterable[_Union[Product, _Mapping]]] = ...) -> None: ...
 
 class Seller(_message.Message):
     __slots__ = ("UUID", "address", "products")
@@ -51,17 +53,17 @@ class Sellers(_message.Message):
     def __init__(self, sellers: _Optional[_Iterable[_Union[Seller, _Mapping]]] = ...) -> None: ...
 
 class Rate_an_item(_message.Message):
-    __slots__ = ("buyer", "rating", "review")
-    BUYER_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("ProductUUID", "address", "rating")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    ADDRESS_FIELD_NUMBER: _ClassVar[int]
     RATING_FIELD_NUMBER: _ClassVar[int]
-    REVIEW_FIELD_NUMBER: _ClassVar[int]
-    buyer: Buyer
+    ProductUUID: str
+    address: str
     rating: int
-    review: str
-    def __init__(self, buyer: _Optional[_Union[Buyer, _Mapping]] = ..., rating: _Optional[int] = ..., review: _Optional[str] = ...) -> None: ...
+    def __init__(self, ProductUUID: _Optional[str] = ..., address: _Optional[str] = ..., rating: _Optional[int] = ...) -> None: ...
 
 class Product(_message.Message):
-    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "Product_UUID", "category", "seller")
+    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "Product_UUID", "category", "seller", "rating", "rating_count")
     NAME_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
@@ -71,6 +73,8 @@ class Product(_message.Message):
     PRODUCT_UUID_FIELD_NUMBER: _ClassVar[int]
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
     SELLER_FIELD_NUMBER: _ClassVar[int]
+    RATING_FIELD_NUMBER: _ClassVar[int]
+    RATING_COUNT_FIELD_NUMBER: _ClassVar[int]
     name: str
     price: float
     quantity: int
@@ -80,7 +84,9 @@ class Product(_message.Message):
     Product_UUID: str
     category: Category
     seller: Seller
-    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
+    rating: float
+    rating_count: int
+    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[float] = ..., rating_count: _Optional[int] = ...) -> None: ...
 
 class Products(_message.Message):
     __slots__ = ("products",)
@@ -173,3 +179,45 @@ class DeleteItemRes(_message.Message):
     productUUID: str
     status: str
     def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+
+class WishListReq(_message.Message):
+    __slots__ = ("productUUID", "address")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    productUUID: str
+    address: str
+    def __init__(self, productUUID: _Optional[str] = ..., address: _Optional[str] = ...) -> None: ...
+
+class WishListRes(_message.Message):
+    __slots__ = ("productUUID", "status")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    productUUID: str
+    status: str
+    def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+
+class BuyItemReq(_message.Message):
+    __slots__ = ("item_id", "quantity", "address")
+    ITEM_ID_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    item_id: str
+    quantity: int
+    address: str
+    def __init__(self, item_id: _Optional[str] = ..., quantity: _Optional[int] = ..., address: _Optional[str] = ...) -> None: ...
+
+class BuyItemRes(_message.Message):
+    __slots__ = ("productUUID", "status")
+    PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    productUUID: str
+    status: str
+    def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+
+class SearchReq(_message.Message):
+    __slots__ = ("item_name", "category")
+    ITEM_NAME_FIELD_NUMBER: _ClassVar[int]
+    CATEGORY_FIELD_NUMBER: _ClassVar[int]
+    item_name: str
+    category: str
+    def __init__(self, item_name: _Optional[str] = ..., category: _Optional[str] = ...) -> None: ...

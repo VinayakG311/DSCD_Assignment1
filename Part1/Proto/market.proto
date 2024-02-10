@@ -7,11 +7,11 @@ service Market{
   rpc updateProduct(UpdateItemReq) returns (UpdateItemRes){};
   rpc deleteProduct(DeleteItemReq) returns (DeleteItemRes){};
   rpc viewProduct(void) returns (Product){};
-  rpc searchProduct(void) returns (Products){};
-  rpc addRating(Rate_an_item) returns (Product){};
+  rpc searchProduct(SearchReq) returns (Products){};
+  rpc addRating(Rate_an_item) returns (UpdateItemRes){};
   rpc displayProducts(Seller) returns (Products){};
-  rpc buyProduct(Products) returns (void){};
-  rpc addtoWishlist(Product) returns (Products){};
+  rpc buyProduct(BuyItemReq) returns (BuyItemRes){};
+  rpc addtoWishlist(WishListReq) returns (WishListRes){};
   rpc NotifyClient(void) returns (void){};
 
 
@@ -35,6 +35,7 @@ enum Category {
 message Buyer{
   string UUID = 1;
   string address = 2;
+  repeated Product wishlist=3;
 }
 message Seller{
   string UUID = 1;
@@ -47,9 +48,10 @@ message Sellers{
 }
 
 message Rate_an_item{
-  Buyer buyer=1;
+  string ProductUUID=1;
+  string address=2;
   int32 rating=3;
-  string review=4;
+
 }
 
 message Product{
@@ -62,6 +64,8 @@ message Product{
   string Product_UUID=7;
   Category category =8;
   Seller seller=9;
+  float rating=10;
+  int32 rating_count=11;
 
 }
 
@@ -121,4 +125,29 @@ message DeleteItemRes{
   string productUUID = 1;
   string status = 2;
 
+}
+message WishListReq{
+  string productUUID=1;
+  string address=2;
+}
+
+message WishListRes{
+  string productUUID = 1;
+  string status = 2;
+
+}
+
+message BuyItemReq{
+  string item_id=1;
+  int32 quantity=2;
+  string address=3;
+}
+message BuyItemRes{
+  string productUUID = 1;
+  string status = 2;
+}
+
+message SearchReq{
+  string item_name=1;
+  string category=2;
 }

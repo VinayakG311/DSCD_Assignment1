@@ -46,13 +46,13 @@ class MarketStub(object):
                 )
         self.searchProduct = channel.unary_unary(
                 '/Market/searchProduct',
-                request_serializer=market__pb2.void.SerializeToString,
+                request_serializer=market__pb2.SearchReq.SerializeToString,
                 response_deserializer=market__pb2.Products.FromString,
                 )
         self.addRating = channel.unary_unary(
                 '/Market/addRating',
                 request_serializer=market__pb2.Rate_an_item.SerializeToString,
-                response_deserializer=market__pb2.Product.FromString,
+                response_deserializer=market__pb2.UpdateItemRes.FromString,
                 )
         self.displayProducts = channel.unary_unary(
                 '/Market/displayProducts',
@@ -61,13 +61,13 @@ class MarketStub(object):
                 )
         self.buyProduct = channel.unary_unary(
                 '/Market/buyProduct',
-                request_serializer=market__pb2.Products.SerializeToString,
-                response_deserializer=market__pb2.void.FromString,
+                request_serializer=market__pb2.BuyItemReq.SerializeToString,
+                response_deserializer=market__pb2.BuyItemRes.FromString,
                 )
         self.addtoWishlist = channel.unary_unary(
                 '/Market/addtoWishlist',
-                request_serializer=market__pb2.Product.SerializeToString,
-                response_deserializer=market__pb2.Products.FromString,
+                request_serializer=market__pb2.WishListReq.SerializeToString,
+                response_deserializer=market__pb2.WishListRes.FromString,
                 )
         self.NotifyClient = channel.unary_unary(
                 '/Market/NotifyClient',
@@ -186,13 +186,13 @@ def add_MarketServicer_to_server(servicer, server):
             ),
             'searchProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.searchProduct,
-                    request_deserializer=market__pb2.void.FromString,
+                    request_deserializer=market__pb2.SearchReq.FromString,
                     response_serializer=market__pb2.Products.SerializeToString,
             ),
             'addRating': grpc.unary_unary_rpc_method_handler(
                     servicer.addRating,
                     request_deserializer=market__pb2.Rate_an_item.FromString,
-                    response_serializer=market__pb2.Product.SerializeToString,
+                    response_serializer=market__pb2.UpdateItemRes.SerializeToString,
             ),
             'displayProducts': grpc.unary_unary_rpc_method_handler(
                     servicer.displayProducts,
@@ -201,13 +201,13 @@ def add_MarketServicer_to_server(servicer, server):
             ),
             'buyProduct': grpc.unary_unary_rpc_method_handler(
                     servicer.buyProduct,
-                    request_deserializer=market__pb2.Products.FromString,
-                    response_serializer=market__pb2.void.SerializeToString,
+                    request_deserializer=market__pb2.BuyItemReq.FromString,
+                    response_serializer=market__pb2.BuyItemRes.SerializeToString,
             ),
             'addtoWishlist': grpc.unary_unary_rpc_method_handler(
                     servicer.addtoWishlist,
-                    request_deserializer=market__pb2.Product.FromString,
-                    response_serializer=market__pb2.Products.SerializeToString,
+                    request_deserializer=market__pb2.WishListReq.FromString,
+                    response_serializer=market__pb2.WishListRes.SerializeToString,
             ),
             'NotifyClient': grpc.unary_unary_rpc_method_handler(
                     servicer.NotifyClient,
@@ -338,7 +338,7 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/searchProduct',
-            market__pb2.void.SerializeToString,
+            market__pb2.SearchReq.SerializeToString,
             market__pb2.Products.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -356,7 +356,7 @@ class Market(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/addRating',
             market__pb2.Rate_an_item.SerializeToString,
-            market__pb2.Product.FromString,
+            market__pb2.UpdateItemRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -389,8 +389,8 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/buyProduct',
-            market__pb2.Products.SerializeToString,
-            market__pb2.void.FromString,
+            market__pb2.BuyItemReq.SerializeToString,
+            market__pb2.BuyItemRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -406,8 +406,8 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/addtoWishlist',
-            market__pb2.Product.SerializeToString,
-            market__pb2.Products.FromString,
+            market__pb2.WishListReq.SerializeToString,
+            market__pb2.WishListRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
