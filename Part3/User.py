@@ -1,22 +1,27 @@
-import json
-import sys
-import pika
+import pika,socket,sys,json
 
-user_name = sys.argv[1]
-sub_unsub= sys.argv[2]
-youtuber_name= sys.argv[3]
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+hostname = socket.gethostname()
+ipAddr = socket.gethostbyname(hostname)
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=ipAddr))
 channel = connection.channel()
 
-channel.queue_declare(queue='hello')
-if sub_unsub=='s':
-    channel.basic_publish(exchange='', routing_key='hello', body=json.dumps({"client":"user","user":user_name,"youtuber":youtuber_name,"subscription":1}))
-    print(f"{user_name} subscribed to {youtuber_name}")
-elif sub_unsub=='u':
-    channel.basic_publish(exchange='', routing_key='hello', body=json.dumps({"client":"user","user":user_name,"youtuber":youtuber_name,"subscription":0}))
-    print(f"{user_name} unsubscribed to {youtuber_name}")
-else:
-    print('enter valid arguments')
+channel.queue_declare(queue='user_request')
 
-connection.close()
+if(len(sys.argv) == 2):
+  name = sys.argv[1]
+  request_obj = {"userName":name}
+  request = json.dumps(request_obj)
+  channel.basic_publish(exchange='', routing_key='user_request', body=request)
+  print(f"Login request sent by {name}")
+
+  connection.close()
+  
+elif(len(sys.argv) == 4):
+  name = sys.argv[1]
+  option = sys.argv[2]
+  youtuber = sys.argv[3]
+  
+  request_obj = {"userName":name, "option":option, "youtuberName":youtuber}
+  request = json.dumps(request_obj)
+  channel.basic_publish(exchange='', routing_key='user_request', body=request)
