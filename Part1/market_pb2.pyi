@@ -82,11 +82,11 @@ class Product(_message.Message):
     seller_address: str
     seller_UUID: str
     Product_UUID: str
-    category: Category
+    category: str
     seller: Seller
     rating: float
     rating_count: int
-    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[float] = ..., rating_count: _Optional[int] = ...) -> None: ...
+    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[float] = ..., rating_count: _Optional[int] = ...) -> None: ...
 
 class Products(_message.Message):
     __slots__ = ("products",)
@@ -124,9 +124,9 @@ class sellItemReq(_message.Message):
     sellerAddress: str
     price: float
     sellerUUID: str
-    Category: Category
+    Category: str
     seller: Seller
-    def __init__(self, name: _Optional[str] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., sellerAddress: _Optional[str] = ..., price: _Optional[float] = ..., sellerUUID: _Optional[str] = ..., Category: _Optional[_Union[Category, str]] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
+    def __init__(self, name: _Optional[str] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., sellerAddress: _Optional[str] = ..., price: _Optional[float] = ..., sellerUUID: _Optional[str] = ..., Category: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ...) -> None: ...
 
 class sellItemRes(_message.Message):
     __slots__ = ("productUUID", "status")

@@ -62,7 +62,7 @@ message Product{
   string seller_address=5;
   string seller_UUID=6;
   string Product_UUID=7;
-  Category category =8;
+  string category =8;
   Seller seller=9;
   float rating=10;
   int32 rating_count=11;
@@ -91,7 +91,7 @@ message sellItemReq{
   string sellerAddress = 4;
   float price = 5;
   string sellerUUID = 6;
-  Category Category = 7;
+  string Category = 7;
   Seller seller=8;
 }
 

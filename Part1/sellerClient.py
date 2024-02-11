@@ -15,10 +15,12 @@ seller = market_pb2.Seller(UUID="-1", address="1", products=[])
 s_id = ""
 s_addr = ""
 s = seller
+categories = ["ELECTRONICS", "FASHION", "OTHERS"]
 
-#---------------------------------Seller---------------------------------
+
+# ---------------------------------Seller---------------------------------
 def registerSeller(stub):
-    global s,s_id,s_addr
+    global s, s_id, s_addr
     id = str(uuid.uuid1())
     s_id = id
     seller = market_pb2.Seller(UUID=str(id), address=ipAddr, products=[])
@@ -44,15 +46,17 @@ def addItem(stub):
     category = int(input("Enter category (Elec 0, Fas 1, Oth 2)"))
 
     req = market_pb2.sellItemReq(name=name, quantity=qty, description=description, sellerAddress=sellerAddress,
-                                 price=price, sellerUUID=sellerUUID, Category=market_pb2.Category.Name(category),seller=s)
+                                 price=price, sellerUUID=sellerUUID, Category=categories[category], seller=s)
     res = stub.sellItem(req)
 
-    if res!=None:
+    if res != None:
         print('SUCCESS')
-        s=res
+        s = res
     else:
         print('FAILURE')
-   # print(f"Product added with UUID : {res.productUUID}")
+
+
+# print(f"Product added with UUID : {res.productUUID}")
 
 
 def DeleteItem(stub):
@@ -60,11 +64,11 @@ def DeleteItem(stub):
     s_uuid = input('Enter Seller id : ')
     s_aadr = input('Enter Seller Address : ')
 
-    req=market_pb2.DeleteItemReq(Product_UUID=id,seller_UUID=s_uuid,seller_address=s_aadr)
-    res=stub.deleteProduct(req)
-    if res.status=='SUCCESS':
+    req = market_pb2.DeleteItemReq(Product_UUID=id, seller_UUID=s_uuid, seller_address=s_aadr)
+    res = stub.deleteProduct(req)
+    if res.status == 'SUCCESS':
         for p in s.products:
-            if p.Product_UUID==id:
+            if p.Product_UUID == id:
                 s.products.remove(p)
         print('SUCCESS')
     else:
@@ -80,16 +84,17 @@ def UpdateItem(stub):
     Quant = int(input('Enter Updated Quant : '))
     Desc = input('Enter Updated Desc : ')
 
-    req = market_pb2.UpdateItemReq(Product_UUID=p_id,seller_UUID=s_uuid,seller_address=s_aadr,price=Price,quantity=Quant,description=Desc,seller=s)
+    req = market_pb2.UpdateItemReq(Product_UUID=p_id, seller_UUID=s_uuid, seller_address=s_aadr, price=Price,
+                                   quantity=Quant, description=Desc, seller=s)
     res = stub.updateProduct(req)
 
-    if(res.status=='SUCCESS'):
+    if (res.status == 'SUCCESS'):
         print('SUCCESS')
         for p in s.products:
-            if p.Product_UUID==p_id:
-                p.price=Price
-                p.description=Desc
-                p.quantity=Quant
+            if p.Product_UUID == p_id:
+                p.price = Price
+                p.description = Desc
+                p.quantity = Quant
     else:
         print('FAILURE')
 
@@ -99,6 +104,7 @@ def DisplayItem(stub):
     s_aadr = input('Enter Seller Address : ')
     res = stub.displayProducts(s)
     print(res)
+
 
 def run():
     try:

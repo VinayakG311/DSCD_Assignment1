@@ -33,6 +33,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
 
     def sellItem(self, request, context):
         id = str(uuid.uuid1())
+
         product = market_pb2.Product(Product_UUID=id, category=request.Category, name=request.name, price=request.price,
                                      quantity=request.quantity, description=request.description,
                                      seller_address=request.sellerAddress, seller_UUID=request.sellerUUID)
@@ -99,22 +100,28 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
         return market_pb2.void()
 
     def searchProduct(self, request, context):
-        prods=[market_pb2.Products]
-        if request.item_name=='':
+
+        prods=market_pb2.Products()
+
+        if request.item_name == '_':
             if request.category == 'ANY':
-                return self.Products
+                for i in self.Products:
+                    prods.products.append(i)
+                return prods
             else:
                 for product in self.Products:
-                    if product.category==request.category:
-                        prods.append(product)
+                    if product.category == request.category:
+                        prods.products.append(product)
         else:
             for product in self.Products:
-                if product.name==request.item_name:
+                if product.name == request.item_name:
+
                     if request.category == 'ANY':
-                        prods.append(product)
+                        prods.products.append(product)
                     else:
-                        if request.category == product.category:
-                            prods.append(product)
+                        print(product.category,request.category)
+                        if request.category == str(product.category):
+                            prods.products.append(product)
 
         return prods
 
@@ -149,7 +156,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                 user.wishlist.append(request.ProductUUID)
                 return market_pb2.WishListRes(status='SUCCESS', productUUID=request.ProductUUID)
 
-        return market_pb2.WishListRes(status='Failure',productUUID=request.ProductUUID)
+        return market_pb2.WishListRes(status='Failure', productUUID=request.ProductUUID)
 
     def buyProduct(self, request, context):
         print(self.Products)
@@ -157,11 +164,11 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
             if product.Product_UUID == request.item_id:
                 print(product.quantity)
                 if product.quantity >= request.quantity:
-
-                    product.quantity-=request.quantity
-                    print(f"Buy request from {request.address} for item {request.item_id} with quantity {request.quantity}")
+                    product.quantity -= request.quantity
+                    print(
+                        f"Buy request from {request.address} for item {request.item_id} with quantity {request.quantity}")
                     print(self.Products)
-                    return market_pb2.WishListRes(status='SUCCESS',productUUID=request.item_id)
+                    return market_pb2.WishListRes(status='SUCCESS', productUUID=request.item_id)
         return market_pb2.WishListRes(status='FAILURE', productUUID=request.item_id)
 
 

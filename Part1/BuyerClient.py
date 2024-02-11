@@ -7,7 +7,10 @@ def SearchItem(stub):
     print("Search Request initiated")
     item_name = input("Enter Item name (leave blank to display all items): ")
     category = input("Enter Category : ")
+    if item_name=="":
+        item_name="_"
     req = market_pb2.SearchReq(item_name=item_name,category=category)
+    print(req)
     res = stub.searchProduct(req)
     print(res)
 
