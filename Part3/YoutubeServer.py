@@ -12,6 +12,12 @@ ipAddr = socket.gethostbyname(hostname)
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=ipAddr))
 channel = connection.channel()
 
+
+def notify_users(name,video):
+  message = f"New Notification: {name} uploaded {video}"
+  # print(message)
+  channel.basic_publish(exchange='notifications', routing_key=name, body=message,properties=pika.BasicProperties(delivery_mode=2))
+
 def handleUserLogin(request):
   name = request["userName"]
   if(name in userSubscriptions):
@@ -24,7 +30,7 @@ def handleUserLogin(request):
      
 def handleUserSubscription(request):
   name = request["userName"]
-  option = request["option"]
+  subscribe = request["subscribe"]
   youtuberName = request["youtuberName"]
   
   if(name not in userSubscriptions):
@@ -34,7 +40,7 @@ def handleUserSubscription(request):
     print("No such youtuber ....")
     return
   
-  if(option == 's'):
+  if(subscribe):
     
     userSubscriptions[name].append(youtuberName)
   else:
@@ -49,6 +55,7 @@ def consume_youtuber_requests(ch,method,properties,body):
   name = request["youtuberName"]
   video = request["videoName"]
   # print(f"Registration Requst by youtuber {body.decode()}")
+  
   if(name in youtuberVideos):
     print("Youtuber present adding video ....")
     youtuberVideos[name].append(video)
@@ -57,7 +64,9 @@ def consume_youtuber_requests(ch,method,properties,body):
     youtuberVideos[name] = []
     youtuberVideos[name].append(video)
   
-  print(youtuberVideos)
+  notify_users(name,video)
+  
+  # print(youtuberVideos)
   
 def consume_user_requests(ch,method,properties,body):
   request = json.loads(body.decode())
@@ -79,7 +88,19 @@ def consume_user_requests(ch,method,properties,body):
 channel.queue_declare(queue='youtuber_request')
 channel.queue_declare(queue='user_request')
 
+channel.exchange_declare(exchange="notifications",exchange_type='direct')
+
 channel.basic_consume(queue='youtuber_request', on_message_callback=consume_youtuber_requests, auto_ack=True)
 channel.basic_consume(queue='user_request', on_message_callback=consume_user_requests, auto_ack=True)
-while(True):
+# while(True):
+#   try:
+#     channel.start_consuming()
+#   except KeyboardInterrupt:
+#     connection.close()
+#     sys.exit(0)
+  
+try:  
   channel.start_consuming()
+except KeyboardInterrupt:
+  connection.close()
+  sys.exit(0)

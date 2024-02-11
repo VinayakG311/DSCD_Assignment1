@@ -29,4 +29,4 @@ channel.basic_publish(exchange='', routing_key='youtuber_request', body=request)
 # channel.basic_publish(exchange='', routing_key='youtuber_request', body=name)
 # print(f"Registration request sent by {name}")
 
-connection.close()
+# connection.close()
