@@ -1,5 +1,5 @@
 import zmq
-import time
+import time,socket
 import uuid
 from datetime import datetime
 
@@ -10,12 +10,16 @@ serverSocket = context.socket(zmq.REQ)
 uuid = str(uuid.uuid1())
 
 
-
+hostname = socket.gethostname()
+ipAddr = socket.gethostbyname(hostname)
 
 #Need to take ip addr of grp from response
 
-groupSocket = context.socket(zmq.REQ)
+groupSocket1 = context.socket(zmq.REQ)
+groupSocket2 = context.socket(zmq.REQ)
+groupSocket3 = context.socket(zmq.REQ)
 
+groupSockets = [groupSocket1,groupSocket2,groupSocket3]
 
 
 
@@ -28,34 +32,52 @@ while(1):
     print(response)
     
   elif(choice == 2):
-    ip = input("Enter Group IP Address :  ")
-    groupSocket.connect(f"tcp://{ip}:5566")
+    ip = input("Enter Group IP Address followed by port number (IP:PORT) :  ")
+    address = ip.split(':')
+    ip = address[0]
+    groupPort = address[1]
+    ind = int(groupPort)-5010
+    groupSockets[ind].connect(f"tcp://{ip}:{groupPort}")
     # groupSocket.send_json({"Action":"Join","uuid":uuid})
     # print(request)
     
-    groupSocket.send_json({"Action":"Join","uuid":uuid})
+    groupSockets[ind].send_json({"Action":"Join","uuid":uuid})
     # print(request)
-    response = groupSocket.recv_string()
+    response = groupSockets[ind].recv_string()
 
     print(response)
   
   
   elif(choice == 3):
-    
+    ip = input("Enter Group IP Address followed by port number (IP:PORT) :  ")
+    address = ip.split(':')
+    ip = address[0]
+    groupPort = address[1]
+    ind = int(groupPort)-5010
     currTime = str(datetime.now())
     messageBody = input("Enter your message : ")
-    groupSocket.send_json({"Action":"Message","Time":currTime,"Data":messageBody,"uuid":uuid})
-    response = groupSocket.recv_string()
+    groupSockets[ind].send_json({"Action":"Message","Time":currTime,"Data":messageBody,"uuid":uuid})
+    response = groupSockets[ind].recv_string()
     print(response)
     
   elif (choice == 4):
+    ip = input("Enter Group IP Address followed by port number (IP:PORT) :  ")
+    address = ip.split(':')
+    ip = address[0]
+    groupPort = address[1]
+    ind = int(groupPort)-5010
     timestamp = input("Enter the timestamp : (-) for no specific timing")
-    groupSocket.send_json({"Action" : "Retrieve","uuid":uuid,"Timestamp":timestamp})
-    response = groupSocket.recv_string()
+    groupSockets[ind].send_json({"Action" : "Retrieve","uuid":uuid,"Timestamp":timestamp})
+    response = groupSockets[ind].recv_string()
     print(response)
     
   elif(choice == 5):
-    groupSocket.send_json({"Action":"Leave","uuid":uuid})
-    response = groupSocket.recv_string()
+    ip = input("Enter Group IP Address followed by port number (IP:PORT) :  ")
+    address = ip.split(':')
+    ip = address[0]
+    groupPort = address[1]
+    ind = int(groupPort)-5010
+    groupSockets[ind].send_json({"Action":"Leave","uuid":uuid})
+    response = groupSockets[ind].recv_string()
     print(response)
   time.sleep(1)
