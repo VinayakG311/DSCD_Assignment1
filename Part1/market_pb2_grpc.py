@@ -71,8 +71,8 @@ class MarketStub(object):
                 )
         self.NotifyClient = channel.unary_unary(
                 '/Market/NotifyClient',
-                request_serializer=market__pb2.void.SerializeToString,
-                response_deserializer=market__pb2.void.FromString,
+                request_serializer=market__pb2.NotificationReq.SerializeToString,
+                response_deserializer=market__pb2.NotificationRes.FromString,
                 )
 
 
@@ -211,8 +211,8 @@ def add_MarketServicer_to_server(servicer, server):
             ),
             'NotifyClient': grpc.unary_unary_rpc_method_handler(
                     servicer.NotifyClient,
-                    request_deserializer=market__pb2.void.FromString,
-                    response_serializer=market__pb2.void.SerializeToString,
+                    request_deserializer=market__pb2.NotificationReq.FromString,
+                    response_serializer=market__pb2.NotificationRes.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -423,7 +423,7 @@ class Market(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Market/NotifyClient',
-            market__pb2.void.SerializeToString,
-            market__pb2.void.FromString,
+            market__pb2.NotificationReq.SerializeToString,
+            market__pb2.NotificationRes.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

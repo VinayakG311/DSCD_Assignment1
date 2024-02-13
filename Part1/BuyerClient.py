@@ -1,3 +1,5 @@
+import threading
+
 import grpc
 
 import market_pb2_grpc, market_pb2
@@ -37,12 +39,21 @@ def RateItem(stub):
     item = market_pb2.Rate_an_item(ProductUUID=item_id,address=address,rating=rating)
     res = stub.addRating(item)
     print(res)
+def notifs(stub,address,uuid):
 
+    req = market_pb2.NotificationReq(UUID = uuid,address=address)
+    res = stub.NotifyClient(req)
+    print(res)
 def run():
     try:
         while True:
             with grpc.insecure_channel('localhost:50051') as channel:
                 stub = market_pb2_grpc.MarketStub(channel)
+                address="1"
+                uuid="2"
+                # thread = threading.Thread(target=notifs,args=(stub,address,uuid))
+                # thread.start()
+
                 print(
                     '1: Search Item\n 2: Buy Product\n 3: Add Product to Wishlist\n 4: Rate Product\n 5: Exit\n')
                 a = int(input('Enter Choice : '))

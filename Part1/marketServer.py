@@ -151,15 +151,28 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
         return market_pb2.UpdateItemRes(status='FAILURE', productUUID=request.ProductUUID)
 
     def addtoWishlist(self, request, context):
+        m=0
         for user in self.Users:
             if user.address == request.address:
-                user.wishlist.append(request.ProductUUID)
-                return market_pb2.WishListRes(status='SUCCESS', productUUID=request.ProductUUID)
+                m=1
+                for prod in self.Products:
+                    if prod.Product_UUID == request.productUUID:
+                        user.wishlist.append(prod)
+                        print(self.Users)
+                        return market_pb2.WishListRes(status='SUCCESS', productUUID=request.productUUID)
+        if m==0:
+            new_user = market_pb2.Buyer(UUID=request.address,wishlist=[],address=request.address)
+            for prod in self.Products:
+                if prod.Product_UUID == request.productUUID:
 
-        return market_pb2.WishListRes(status='Failure', productUUID=request.ProductUUID)
+                    new_user.wishlist.append(prod)
+            self.Users.append(new_user)
+            print(self.Users)
+            return market_pb2.WishListRes(status='SUCCESS', productUUID=request.productUUID)
+        return market_pb2.WishListRes(status='Failure', productUUID=request.productUUID)
 
     def buyProduct(self, request, context):
-        print(self.Products)
+
         for product in self.Products:
             if product.Product_UUID == request.item_id:
                 print(product.quantity)
@@ -170,6 +183,9 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     print(self.Products)
                     return market_pb2.WishListRes(status='SUCCESS', productUUID=request.item_id)
         return market_pb2.WishListRes(status='FAILURE', productUUID=request.item_id)
+    def NotifyClient(self,request,context):
+        print(request)
+        return market_pb2.NotificationRes(message = 'SUCCESS')
 
 
 # ------------------------buyer&seller---------------------------------
@@ -192,4 +208,5 @@ def serve():
 
 
 if __name__ == '__main__':
+
     serve()

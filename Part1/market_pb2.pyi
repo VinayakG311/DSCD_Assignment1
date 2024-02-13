@@ -221,3 +221,17 @@ class SearchReq(_message.Message):
     item_name: str
     category: str
     def __init__(self, item_name: _Optional[str] = ..., category: _Optional[str] = ...) -> None: ...
+
+class NotificationReq(_message.Message):
+    __slots__ = ("address", "UUID")
+    ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    UUID_FIELD_NUMBER: _ClassVar[int]
+    address: str
+    UUID: str
+    def __init__(self, address: _Optional[str] = ..., UUID: _Optional[str] = ...) -> None: ...
+
+class NotificationRes(_message.Message):
+    __slots__ = ("message",)
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    message: str
+    def __init__(self, message: _Optional[str] = ...) -> None: ...
