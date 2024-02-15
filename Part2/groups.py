@@ -3,7 +3,9 @@ import time,sys
 import uuid
 import socket
 import threading
+import sys
 
+port = int(sys.argv[1])
 NO_OF_GROUPS = 3
 BASE_PORT = 5010
 
@@ -11,18 +13,10 @@ context = zmq.Context()
 serverSocket = context.socket(zmq.REQ)
 serverSocket.connect("tcp://localhost:5555")
 
-# messageSocket = context.socket(zmq.REP)
-# messageSocket.bind("tcp://*:5566")
 
-# uuid = str(uuid.uuid1())
 
 hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
-# groupName = input("Enter Group Name : ")
-# serverSocket.send_json({"Request":"register_group","Name":groupName,"ipAddr":ipAddr})
-# response = serverSocket.recv_string()
-# print(response)
-
 
 groupSockets = []
 thr = []
@@ -112,29 +106,19 @@ def handleGroupUserInteraction(messageSocket,port):
 
 
 try:
-    
-  for groupNum in range(NO_OF_GROUPS):
-    currPort = groupNum+BASE_PORT
-    registerGroup(ipAddr,currPort)
-    
+
+  registerGroup(ipAddr,port)
+
+  handleGroupUserInteraction(groupSockets[0][0],groupSockets[0][1])
+
   for [socket,port] in groupSockets:
     thread = threading.Thread(target=handleGroupUserInteraction, args=(socket,port,) )
     thread.start()
     thr.append(thread)
     
 
-  for th in thr:
-    th.join()
-
-  for socket in groupSockets:
-    socket.close()
 
 except KeyboardInterrupt:
-  for th in thr:
-    th.join()
-
-  for socket in groupSockets:
-    socket.close()
 
   sys.exit(0)
     

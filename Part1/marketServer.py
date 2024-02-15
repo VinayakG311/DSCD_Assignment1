@@ -3,6 +3,9 @@ import grpc_tools
 import time
 import market_pb2
 import market_pb2_grpc
+import Notification_pb2
+import Notification_pb2_grpc
+
 import uuid
 
 from concurrent import futures
@@ -36,7 +39,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
 
         product = market_pb2.Product(Product_UUID=id, category=request.Category, name=request.name, price=request.price,
                                      quantity=request.quantity, description=request.description,
-                                     seller_address=request.sellerAddress, seller_UUID=request.sellerUUID)
+                                     seller_address=request.sellerAddress, seller_UUID=request.sellerUUID,wishlist=[])
         request.seller.products.append(product)
         self.Products.append(product)
         res = market_pb2.sellItemRes(productUUID=id, status=market_pb2.Status.SUCCESS)
@@ -64,9 +67,14 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     product.quantity = request.quantity
                     product.description = request.description
                     res = market_pb2.UpdateItemRes(productUUID=product.Product_UUID, status='SUCCESS')
+                    for i in product.wishlist:
+
+                        req = market_pb2.NotificationReq(address=i.address,UUID=i.UUID,notif_ip = i.notif_ip)
+                        res=self.NotifyBuyer(req)
+
                     print(
                         f'Product with uuid {product.Product_UUID} has been updated by seller with uuid {request.seller_UUID}')
-                    return res
+                    return market_pb2.UpdateItemRes(productUUID=product.Product_UUID, status='SUCCESS')
                 else:
                     res = market_pb2.UpdateItemRes(productUUID=request.Product_UUID, status='FAILURE')
                     print('Incorrect Seller Credentials')
@@ -158,16 +166,17 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                 for prod in self.Products:
                     if prod.Product_UUID == request.productUUID:
                         user.wishlist.append(prod)
-                        print(self.Users)
+                        prod.wishlist.append(user)
+
                         return market_pb2.WishListRes(status='SUCCESS', productUUID=request.productUUID)
         if m==0:
-            new_user = market_pb2.Buyer(UUID=request.address,wishlist=[],address=request.address)
+            new_user = market_pb2.Buyer(UUID=request.uuid,wishlist=[],address=request.address,notif_ip=request.notif_ip)
             for prod in self.Products:
                 if prod.Product_UUID == request.productUUID:
-
                     new_user.wishlist.append(prod)
+                    prod.wishlist.append(new_user)
             self.Users.append(new_user)
-            print(self.Users)
+
             return market_pb2.WishListRes(status='SUCCESS', productUUID=request.productUUID)
         return market_pb2.WishListRes(status='Failure', productUUID=request.productUUID)
 
@@ -183,9 +192,17 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     print(self.Products)
                     return market_pb2.WishListRes(status='SUCCESS', productUUID=request.item_id)
         return market_pb2.WishListRes(status='FAILURE', productUUID=request.item_id)
-    def NotifyClient(self,request,context):
+    def NotifyBuyer(self,request):
         print(request)
+        with grpc.insecure_channel('localhost:50051') as channel:
+            stub = Notification_pb2_grpc.NotificationStub(channel)
+            print(stub.Notif1())
+         #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
+
         return market_pb2.NotificationRes(message = 'SUCCESS')
+    def NotifySeller(self,request):
+        print(request)
+        return market_pb2.NotificationRes(message='SUCCESS')
 
 
 # ------------------------buyer&seller---------------------------------
@@ -195,7 +212,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
     market_pb2_grpc.add_MarketServicer_to_server(MarketServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()

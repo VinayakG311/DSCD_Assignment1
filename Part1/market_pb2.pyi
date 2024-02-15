@@ -27,14 +27,16 @@ class void(_message.Message):
     def __init__(self) -> None: ...
 
 class Buyer(_message.Message):
-    __slots__ = ("UUID", "address", "wishlist")
+    __slots__ = ("UUID", "address", "wishlist", "notif_ip")
     UUID_FIELD_NUMBER: _ClassVar[int]
     ADDRESS_FIELD_NUMBER: _ClassVar[int]
     WISHLIST_FIELD_NUMBER: _ClassVar[int]
+    NOTIF_IP_FIELD_NUMBER: _ClassVar[int]
     UUID: str
     address: str
     wishlist: _containers.RepeatedCompositeFieldContainer[Product]
-    def __init__(self, UUID: _Optional[str] = ..., address: _Optional[str] = ..., wishlist: _Optional[_Iterable[_Union[Product, _Mapping]]] = ...) -> None: ...
+    notif_ip: str
+    def __init__(self, UUID: _Optional[str] = ..., address: _Optional[str] = ..., wishlist: _Optional[_Iterable[_Union[Product, _Mapping]]] = ..., notif_ip: _Optional[str] = ...) -> None: ...
 
 class Seller(_message.Message):
     __slots__ = ("UUID", "address", "products")
@@ -63,7 +65,7 @@ class Rate_an_item(_message.Message):
     def __init__(self, ProductUUID: _Optional[str] = ..., address: _Optional[str] = ..., rating: _Optional[int] = ...) -> None: ...
 
 class Product(_message.Message):
-    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "Product_UUID", "category", "seller", "rating", "rating_count")
+    __slots__ = ("name", "price", "quantity", "description", "seller_address", "seller_UUID", "Product_UUID", "category", "seller", "rating", "rating_count", "wishlist")
     NAME_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
@@ -75,6 +77,7 @@ class Product(_message.Message):
     SELLER_FIELD_NUMBER: _ClassVar[int]
     RATING_FIELD_NUMBER: _ClassVar[int]
     RATING_COUNT_FIELD_NUMBER: _ClassVar[int]
+    WISHLIST_FIELD_NUMBER: _ClassVar[int]
     name: str
     price: float
     quantity: int
@@ -86,7 +89,8 @@ class Product(_message.Message):
     seller: Seller
     rating: float
     rating_count: int
-    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[float] = ..., rating_count: _Optional[int] = ...) -> None: ...
+    wishlist: _containers.RepeatedCompositeFieldContainer[Buyer]
+    def __init__(self, name: _Optional[str] = ..., price: _Optional[float] = ..., quantity: _Optional[int] = ..., description: _Optional[str] = ..., seller_address: _Optional[str] = ..., seller_UUID: _Optional[str] = ..., Product_UUID: _Optional[str] = ..., category: _Optional[str] = ..., seller: _Optional[_Union[Seller, _Mapping]] = ..., rating: _Optional[float] = ..., rating_count: _Optional[int] = ..., wishlist: _Optional[_Iterable[_Union[Buyer, _Mapping]]] = ...) -> None: ...
 
 class Products(_message.Message):
     __slots__ = ("products",)
@@ -95,12 +99,14 @@ class Products(_message.Message):
     def __init__(self, products: _Optional[_Iterable[_Union[Product, _Mapping]]] = ...) -> None: ...
 
 class registerSellerReq(_message.Message):
-    __slots__ = ("address", "uuid")
+    __slots__ = ("address", "uuid", "notif_ip")
     ADDRESS_FIELD_NUMBER: _ClassVar[int]
     UUID_FIELD_NUMBER: _ClassVar[int]
+    NOTIF_IP_FIELD_NUMBER: _ClassVar[int]
     address: str
     uuid: str
-    def __init__(self, address: _Optional[str] = ..., uuid: _Optional[str] = ...) -> None: ...
+    notif_ip: str
+    def __init__(self, address: _Optional[str] = ..., uuid: _Optional[str] = ..., notif_ip: _Optional[str] = ...) -> None: ...
 
 class registerSellerRes(_message.Message):
     __slots__ = ("status",)
@@ -181,12 +187,16 @@ class DeleteItemRes(_message.Message):
     def __init__(self, productUUID: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
 
 class WishListReq(_message.Message):
-    __slots__ = ("productUUID", "address")
+    __slots__ = ("productUUID", "address", "notif_ip", "uuid")
     PRODUCTUUID_FIELD_NUMBER: _ClassVar[int]
     ADDRESS_FIELD_NUMBER: _ClassVar[int]
+    NOTIF_IP_FIELD_NUMBER: _ClassVar[int]
+    UUID_FIELD_NUMBER: _ClassVar[int]
     productUUID: str
     address: str
-    def __init__(self, productUUID: _Optional[str] = ..., address: _Optional[str] = ...) -> None: ...
+    notif_ip: str
+    uuid: str
+    def __init__(self, productUUID: _Optional[str] = ..., address: _Optional[str] = ..., notif_ip: _Optional[str] = ..., uuid: _Optional[str] = ...) -> None: ...
 
 class WishListRes(_message.Message):
     __slots__ = ("productUUID", "status")
@@ -223,12 +233,14 @@ class SearchReq(_message.Message):
     def __init__(self, item_name: _Optional[str] = ..., category: _Optional[str] = ...) -> None: ...
 
 class NotificationReq(_message.Message):
-    __slots__ = ("address", "UUID")
+    __slots__ = ("address", "UUID", "notif_ip")
     ADDRESS_FIELD_NUMBER: _ClassVar[int]
     UUID_FIELD_NUMBER: _ClassVar[int]
+    NOTIF_IP_FIELD_NUMBER: _ClassVar[int]
     address: str
     UUID: str
-    def __init__(self, address: _Optional[str] = ..., UUID: _Optional[str] = ...) -> None: ...
+    notif_ip: str
+    def __init__(self, address: _Optional[str] = ..., UUID: _Optional[str] = ..., notif_ip: _Optional[str] = ...) -> None: ...
 
 class NotificationRes(_message.Message):
     __slots__ = ("message",)

@@ -69,8 +69,13 @@ class MarketStub(object):
                 request_serializer=market__pb2.WishListReq.SerializeToString,
                 response_deserializer=market__pb2.WishListRes.FromString,
                 )
-        self.NotifyClient = channel.unary_unary(
-                '/Market/NotifyClient',
+        self.NotifyBuyer = channel.unary_unary(
+                '/Market/NotifyBuyer',
+                request_serializer=market__pb2.NotificationReq.SerializeToString,
+                response_deserializer=market__pb2.NotificationRes.FromString,
+                )
+        self.NotifySeller = channel.unary_unary(
+                '/Market/NotifySeller',
                 request_serializer=market__pb2.NotificationReq.SerializeToString,
                 response_deserializer=market__pb2.NotificationRes.FromString,
                 )
@@ -145,7 +150,13 @@ class MarketServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def NotifyClient(self, request, context):
+    def NotifyBuyer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def NotifySeller(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -209,8 +220,13 @@ def add_MarketServicer_to_server(servicer, server):
                     request_deserializer=market__pb2.WishListReq.FromString,
                     response_serializer=market__pb2.WishListRes.SerializeToString,
             ),
-            'NotifyClient': grpc.unary_unary_rpc_method_handler(
-                    servicer.NotifyClient,
+            'NotifyBuyer': grpc.unary_unary_rpc_method_handler(
+                    servicer.NotifyBuyer,
+                    request_deserializer=market__pb2.NotificationReq.FromString,
+                    response_serializer=market__pb2.NotificationRes.SerializeToString,
+            ),
+            'NotifySeller': grpc.unary_unary_rpc_method_handler(
+                    servicer.NotifySeller,
                     request_deserializer=market__pb2.NotificationReq.FromString,
                     response_serializer=market__pb2.NotificationRes.SerializeToString,
             ),
@@ -412,7 +428,7 @@ class Market(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def NotifyClient(request,
+    def NotifyBuyer(request,
             target,
             options=(),
             channel_credentials=None,
@@ -422,7 +438,24 @@ class Market(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Market/NotifyClient',
+        return grpc.experimental.unary_unary(request, target, '/Market/NotifyBuyer',
+            market__pb2.NotificationReq.SerializeToString,
+            market__pb2.NotificationRes.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def NotifySeller(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Market/NotifySeller',
             market__pb2.NotificationReq.SerializeToString,
             market__pb2.NotificationRes.FromString,
             options, channel_credentials,

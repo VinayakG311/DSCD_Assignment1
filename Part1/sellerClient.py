@@ -1,3 +1,6 @@
+import sys
+import threading
+from concurrent import futures
 import grpc
 import grpc_tools
 import time
@@ -5,11 +8,15 @@ import market_pb2
 import market_pb2_grpc
 import concurrent
 import uuid
+import Notification_pb2
+import Notification_pb2_grpc
 # https://www.tutorialspoint.com/python-program-to-find-the-ip-address-of-the-client
 import socket
-
+port = sys.argv[1]
 hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
+notification_server_ip=ipAddr+":50052"
+ipAddr = ipAddr + ":" + port
 seller = market_pb2.Seller(UUID="-1", address="1", products=[])
 
 s_id = ""
@@ -23,8 +30,9 @@ def registerSeller(stub):
     global s, s_id, s_addr
     id = str(uuid.uuid1())
     s_id = id
+
     seller = market_pb2.Seller(UUID=str(id), address=ipAddr, products=[])
-    req = market_pb2.registerSellerReq(address=ipAddr, uuid=id)
+    req = market_pb2.registerSellerReq(address=ipAddr, uuid=id,notif_ip=notification_server_ip)
     res = stub.registerSeller(req)
     if (res.status == 0):
         print(f"Success,Seller registered with uuid : {id}")
@@ -130,5 +138,41 @@ def run():
         return
 
 
+class NotificationServicer(Notification_pb2_grpc.NotificationServicer):
+    pass
+
+def runserver():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
+    Notification_pb2_grpc.add_NotificationServicer_to_server(NotificationServicer(), server)
+    server.add_insecure_port('[::]:50052')
+    server.start()
+    try:
+        while True:
+            time.sleep(3600)  # One hour
+    except KeyboardInterrupt:
+        server.stop(0)
+
+t=[]
 if __name__ == '__main__':
-    run()
+    th = threading.Thread(target=run)
+    th2 = threading.Thread(target=runserver)
+    t.append(th)
+    t.append(th2)
+    try:
+        for i in t:
+
+            i.start()
+        for i in t:
+            i.join()
+    except KeyboardInterrupt:
+
+        sys.exit(0)
+    # try:
+    #     th.start()
+    #     th2.start()
+    #     th.join()
+    #     th2.join()
+    #
+    # except KeyboardInterrupt:
+    #
+    #     sys.exit(0)
