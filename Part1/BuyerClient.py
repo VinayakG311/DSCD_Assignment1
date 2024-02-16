@@ -1,5 +1,5 @@
 import threading
-import uuid
+import uuid,sys,time
 
 import grpc
 
@@ -12,7 +12,7 @@ from concurrent import futures
 port = sys.argv[1]
 hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
-notification_server_ip = ipAddr + ":50051"
+notification_server_ip = ipAddr + ":60051"
 ipAddr = ipAddr + ":" + port
 
 id = str(uuid.uuid1())
@@ -97,15 +97,20 @@ class NotificationServicer(Notification_pb2_grpc.NotificationServicer):
 
     def Notif1(self, request, context):
         print(request.message)
-        return Notification_pb2.void()
+        return Notification_pb2.void2()
 
 
 def runserver():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
     Notification_pb2_grpc.add_NotificationServicer_to_server(NotificationServicer(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:60051')
     server.start()
     print("Notification server started...")
+    try:
+        while True:
+            time.sleep(3600)  # One hour
+    except KeyboardInterrupt:
+        server.stop(0)
 
 
 t = []

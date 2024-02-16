@@ -14,7 +14,7 @@ service Market{
   rpc addtoWishlist(WishListReq) returns (WishListRes){};
   rpc NotifyBuyer(NotificationReq) returns (NotificationRes){};
   rpc NotifySeller(NotificationReq) returns (NotificationRes){};
-
+  
 
 }
 

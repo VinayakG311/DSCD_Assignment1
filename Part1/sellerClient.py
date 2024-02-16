@@ -139,7 +139,9 @@ def run():
 
 
 class NotificationServicer(Notification_pb2_grpc.NotificationServicer):
-    pass
+    def Notif1(self, request, context):
+        print(request.message)
+        return Notification_pb2.void2()
 
 def runserver():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
