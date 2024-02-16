@@ -13,13 +13,35 @@ from concurrent import futures
 
 # handle the notification thing of success and failure of the operation
 
-
+def sendNotificationBuyer(request):
+        print(request)
+        with grpc.insecure_channel('localhost:60051') as channel:
+            stub = Notification_pb2_grpc.NotificationStub(channel)
+            res = stub.Notif1(Notification_pb2.Notif(message="Product Updated ..."))
+            # print(stub.Notif1())
+         #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
+        return "Notiification Sent"
+        # return market_pb2.NotificationRes(message = 'SUCCESS')
+        
+def sendNotificationSeller(request):
+        print(request)
+        with grpc.insecure_channel('localhost:50052') as channel:
+            stub = Notification_pb2_grpc.NotificationStub(channel)
+            res = stub.Notif1(Notification_pb2.Notif(message="Product Bought by client ..."))
+            # print(stub.Notif1())
+         #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
+        return "Notiification Sent"
 class MarketServicer(market_pb2_grpc.MarketServicer):
     sellerList = {}
     Sellers = []
     Products = []
     Users = []
-
+    
+    
+    
+    def NotifySeller(self,request):
+        print(request)
+        return market_pb2.NotificationRes(message='SUCCESS')
     # ------------------------Seller---------------------------------
     def registerSeller(self, request, context):
         currAddress = request.uuid
@@ -44,6 +66,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
         self.Products.append(product)
         res = market_pb2.sellItemRes(productUUID=id, status=market_pb2.Status.SUCCESS)
         print(f'Product with {res.productUUID} has been registered by seller {request.sellerUUID}')
+        
         return request.seller
 
     def deleteProduct(self, request, context):
@@ -70,7 +93,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     for i in product.wishlist:
 
                         req = market_pb2.NotificationReq(address=i.address,UUID=i.UUID,notif_ip = i.notif_ip)
-                        res=self.NotifyBuyer(req)
+                        sendNotificationBuyer("Update Product")
 
                     print(
                         f'Product with uuid {product.Product_UUID} has been updated by seller with uuid {request.seller_UUID}')
@@ -190,19 +213,11 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     print(
                         f"Buy request from {request.address} for item {request.item_id} with quantity {request.quantity}")
                     print(self.Products)
+                    sendNotificationSeller(request)
                     return market_pb2.WishListRes(status='SUCCESS', productUUID=request.item_id)
+            
         return market_pb2.WishListRes(status='FAILURE', productUUID=request.item_id)
-    def NotifyBuyer(self,request):
-        print(request)
-        with grpc.insecure_channel('localhost:50051') as channel:
-            stub = Notification_pb2_grpc.NotificationStub(channel)
-            print(stub.Notif1())
-         #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
-
-        return market_pb2.NotificationRes(message = 'SUCCESS')
-    def NotifySeller(self,request):
-        print(request)
-        return market_pb2.NotificationRes(message='SUCCESS')
+    
 
 
 # ------------------------buyer&seller---------------------------------
