@@ -15,9 +15,10 @@ from concurrent import futures
 
 def sendNotificationBuyer(request):
         print(request)
-        with grpc.insecure_channel('localhost:60051') as channel:
+        ip=request[0]
+        with grpc.insecure_channel(ip) as channel:
             stub = Notification_pb2_grpc.NotificationStub(channel)
-            res = stub.Notif1(Notification_pb2.Notif(message="Product Updated ..."))
+            res = stub.Notif1(Notification_pb2.Notif(message=f"Product Updated with uuid {request[1]}"))
             # print(stub.Notif1())
          #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
         return "Notiification Sent"
@@ -25,9 +26,9 @@ def sendNotificationBuyer(request):
         
 def sendNotificationSeller(request):
         print(request)
-        with grpc.insecure_channel('localhost:50052') as channel:
+        with grpc.insecure_channel(request[0]) as channel:
             stub = Notification_pb2_grpc.NotificationStub(channel)
-            res = stub.Notif1(Notification_pb2.Notif(message="Product Bought by client ..."))
+            res = stub.Notif1(Notification_pb2.Notif(message=f"Product with uuid {request[1]}Bought by client {request[2]}"))
             # print(stub.Notif1())
          #   res=stub.Notif1(Notification_pb2.Notif(message="Notification received"))
         return "Notiification Sent"
@@ -93,7 +94,7 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                     for i in product.wishlist:
 
                         req = market_pb2.NotificationReq(address=i.address,UUID=i.UUID,notif_ip = i.notif_ip)
-                        sendNotificationBuyer("Update Product")
+                        sendNotificationBuyer([i.notif_ip,product.Product_UUID])
 
                     print(
                         f'Product with uuid {product.Product_UUID} has been updated by seller with uuid {request.seller_UUID}')
@@ -218,7 +219,8 @@ class MarketServicer(market_pb2_grpc.MarketServicer):
                         if k.UUID == product.seller_UUID:
                             ip=k.notif_ip
                     req = [ip,request.item_id,request.address]
-                    sendNotificationSeller(request)
+                    
+                    sendNotificationSeller(req)
                     return market_pb2.WishListRes(status='SUCCESS', productUUID=request.item_id)
             
         return market_pb2.WishListRes(status='FAILURE', productUUID=request.item_id)

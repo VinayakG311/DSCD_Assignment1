@@ -2,7 +2,7 @@ syntax= "proto3";
 
 service Market{
   rpc registerSeller(registerSellerReq) returns (registerSellerRes){};
-  rpc sellItem(sellItemReq) returns (Seller){};
+  rpc sellItem(sellItemReq) returns (sellItemRes){};
   rpc addProduct(Product) returns (void){};
   rpc updateProduct(UpdateItemReq) returns (UpdateItemRes){};
   rpc deleteProduct(DeleteItemReq) returns (DeleteItemRes){};
@@ -43,6 +43,7 @@ message Seller{
   string UUID = 1;
   string address = 2;
   repeated Product products=3;
+  string notif_ip=4;
 }
 
 message Sellers{
@@ -101,7 +102,8 @@ message sellItemReq{
 
 message sellItemRes{
   string productUUID = 1;
-  Status status = 2;
+  string status = 2;
+  Seller seller=3;
 }
 
 message UpdateItemReq{

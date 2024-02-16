@@ -1,10 +1,9 @@
 import pika,socket,sys,json
 
-
 hostname = socket.gethostname()
 ipAddr = socket.gethostbyname(hostname)
-
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=ipAddr))
+credentials = pika.PlainCredentials('user1','user1')
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.128.0.3',credentials=credentials))
 channel = connection.channel()
 
 # result = channel.queue_declare(queue='',durable=True)

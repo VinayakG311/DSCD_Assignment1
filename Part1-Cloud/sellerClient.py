@@ -117,7 +117,7 @@ def DisplayItem(stub):
 def run():
     try:
         while True:
-            with grpc.insecure_channel('localhost:50051') as channel:
+            with grpc.insecure_channel('10.128.0.3:50051') as channel:
                 stub = market_pb2_grpc.MarketStub(channel)
                 print(
                     '1: Register\n 2: Add Product\n 3: Delete Product\n 4: Update Product\n 5: Display Products\n 6: Exit\n')
